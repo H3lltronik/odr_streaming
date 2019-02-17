@@ -6,15 +6,26 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
+        sagas: [],
         saga: {}
     },
     mutations: {
         setSagaData (state, payload) {
             state.saga = {...payload}
             console.log("state.saga", state.saga)
+        },
+        setSagas (state, payload) {
+            payload.forEach(element => {
+                state.sagas.push(element)
+            });
         }
     },
     actions: {
+        loadSagasInfo ({commit}) {
+            axios.post("http://localhost/Odr/connections/getSaga.php").then(response => {
+                commit('setSagas', response.data)
+            })
+        },
         loadSagaData ({commit, getters}, idSaga) {
             let bodyFormData = new FormData()
             let saga = {
@@ -98,6 +109,9 @@ export const store = new Vuex.Store({
     getters: {
         getSagaData (state) {
             return state.saga
+        },
+        getSagas (state) {
+            return state.sagas
         }
     }
 })

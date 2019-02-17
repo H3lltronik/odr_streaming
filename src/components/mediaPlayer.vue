@@ -120,6 +120,7 @@ export default {
                                 context.$router.replace(--context.nPagina + '')
                             }
                         }else if(event.keyCode === 39) {
+                            console.log("derecha", context.nPagina, context.totalPages, context.currentScan)
                             if (context.nPagina < context.totalPages){
                                 context.$router.replace(++context.nPagina + '')
                             }
