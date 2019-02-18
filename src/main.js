@@ -12,9 +12,11 @@ import 'vuetify/dist/vuetify.min.css'
 
 //Importar componentes
 import contentTabItem from './components/contentTabItem.vue'
+import CreateHolderDialog from './components/dialogs/createHolder.vue'
 
 //Implementar componentes
 Vue.component('content-tab-item', contentTabItem)
+Vue.component('create-holder-dialog', CreateHolderDialog)
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)

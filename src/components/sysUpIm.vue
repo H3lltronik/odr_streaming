@@ -26,6 +26,7 @@
                                                                 v-model="newBook.saga"
                                                                 label="Sagas"
                                                                 single-line
+                                                                box
                                                                 return-object
                                                             ></v-select>
                                                         </v-flex>
@@ -46,11 +47,12 @@
                                                                 v-model="newBook.holder"
                                                                 label="Holder"
                                                                 single-line
+                                                                box
                                                                 return-object
                                                             ></v-select>
                                                         </v-flex>
                                                         <v-flex xs5>
-                                                            <v-btn color="info" flat outline block>CREATE HOLDER</v-btn>
+                                                            <create-holder-dialog></create-holder-dialog>
                                                         </v-flex>
                                                     </v-layout>
                                                     <!-- Separacion -->
@@ -467,6 +469,7 @@ export default {
             handler: function (val, old) {
               console.log("cambio", val, old)
               if (val.saga.idSaga !== old.saga.idSaga) {
+                  this.loadedData.holders = []
                 let bodyFormData = new FormData()
                 bodyFormData.set('idSaga', val.saga.idSaga)
                 this.axios.post('http://'+this.IPLocalHost+'/Odr/connections/getHolders.php', bodyFormData).then(response => {
