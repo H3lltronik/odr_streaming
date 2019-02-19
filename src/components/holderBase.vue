@@ -11,7 +11,7 @@
                         <v-flex xs10 md7 >
                             <v-layout row wrap :justify-center="smAndDown" :class="{'mt-4' : xsOnly}">
                                 <div :class="{'display-1': !xsOnly, 'title': xsOnly}">
-                                    {{ saga.name }}</div>
+                                    NOMBREEEE</div>
                             </v-layout>
                             <v-divider class="mt-2 mb-1" style="background: #000"></v-divider>
                             <v-layout row wrap align-center>
@@ -103,7 +103,7 @@ export default {
             if (this.$store.getters.getSagaData.idSaga !== this.idSaga) {
                 this.$store.dispatch('loadSagaData', this.idSaga)
                 console.log('Se tenia cargada otra saga')
-            } else 
+            } else
                 console.log('La misma saga cargada')
         }
     },
@@ -120,7 +120,7 @@ export default {
                     return element.idHolder === this.idHolder
                 })
             }
-            else 
+            else
                 return []
         },
         heightHolderItems () {

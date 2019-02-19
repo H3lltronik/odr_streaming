@@ -13,10 +13,12 @@ import 'vuetify/dist/vuetify.min.css'
 //Importar componentes
 import contentTabItem from './components/contentTabItem.vue'
 import CreateHolderDialog from './components/dialogs/createHolder.vue'
+import CreateSagaDialog from './components/dialogs/createSaga.vue'
 
 //Implementar componentes
 Vue.component('content-tab-item', contentTabItem)
 Vue.component('create-holder-dialog', CreateHolderDialog)
+Vue.component('create-saga-dialog', CreateSagaDialog)
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)

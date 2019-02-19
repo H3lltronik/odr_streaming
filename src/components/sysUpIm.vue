@@ -19,7 +19,7 @@
                                                         <v-divider class="my-4"></v-divider>
                                                     </v-layout>
                                                     <v-layout row wrap justify-space-between="">
-                                                        <v-flex xs6>
+                                                        <v-flex xs12 lg6>
                                                             <v-select
                                                                 :items="loadedData.sagas"
                                                                 item-text="tituloSaga"
@@ -30,8 +30,10 @@
                                                                 return-object
                                                             ></v-select>
                                                         </v-flex>
-                                                        <v-flex xs5>
-                                                            <v-btn color="info" flat outline block>CREATE SAGA</v-btn>
+                                                        <v-flex xs12 md5>
+                                                          <v-layout row wrap justify-center>
+                                                            <create-saga-dialog></create-saga-dialog>
+                                                          </v-layout>
                                                         </v-flex>
                                                     </v-layout>
                                                     <!-- Separacion -->
@@ -40,7 +42,7 @@
                                                         <v-divider class="my-4"></v-divider>
                                                     </v-layout>
                                                     <v-layout row wrap justify-space-between="">
-                                                        <v-flex xs6>
+                                                        <v-flex xs12 md6>
                                                             <v-select
                                                                 :items="loadedData.holders"
                                                                 item-text="titleHolder"
@@ -51,8 +53,10 @@
                                                                 return-object
                                                             ></v-select>
                                                         </v-flex>
-                                                        <v-flex xs5>
-                                                            <create-holder-dialog></create-holder-dialog>
+                                                        <v-flex xs12 md5>
+                                                            <v-layout row wrap justify-center>
+                                                              <create-holder-dialog></create-holder-dialog>
+                                                            </v-layout>
                                                         </v-flex>
                                                     </v-layout>
                                                     <!-- Separacion -->
@@ -173,7 +177,9 @@
                                                 </v-layout>
                                             </v-carousel-item>
                                         </v-carousel>
-                                        <v-btn color="error" @click="resetImages()" v-if=(selected)>Remove all images</v-btn>
+                                        <v-layout row wrap justify-center>
+                                          <v-btn color="error" @click="resetImages()" v-if=(selected)>Remove all images</v-btn>
+                                        </v-layout>
                                     </v-flex>
                                 </v-layout>
 

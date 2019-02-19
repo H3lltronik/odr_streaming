@@ -24,15 +24,16 @@
             </v-card-title>
             <v-card-text style="margin-top: -10px;">
                 <v-layout row wrap justify-center>
+
                     <v-flex xs12 lg6 class="pr-1">
                         <v-select
-                            
+
                             label="Saga">
                         </v-select>
                     </v-flex>
                     <v-flex xs12 lg6 class="pl-1">
                         <v-select
-                            
+
                             label="Category">
                         </v-select>
                     </v-flex>
@@ -50,6 +51,7 @@
                         max-height="400" contain>
                         </v-img>
                     </v-flex>
+
                     <v-flex xs12>
                         <v-divider class="my-2"></v-divider>
                     </v-flex>
@@ -71,5 +73,5 @@
 </script>
 
 <style>
-    
+
 </style>
