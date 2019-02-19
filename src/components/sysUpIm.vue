@@ -19,7 +19,7 @@
                                                         <v-divider class="my-4"></v-divider>
                                                     </v-layout>
                                                     <v-layout row wrap justify-space-between="">
-                                                        <v-flex xs12 lg6>
+                                                        <v-flex xs12 lg7>
                                                             <v-select
                                                                 :items="loadedData.sagas"
                                                                 item-text="tituloSaga"
@@ -30,7 +30,7 @@
                                                                 return-object
                                                             ></v-select>
                                                         </v-flex>
-                                                        <v-flex xs12 md5>
+                                                        <v-flex xs12 lg4>
                                                           <v-layout row wrap justify-center>
                                                             <create-saga-dialog></create-saga-dialog>
                                                           </v-layout>
@@ -42,7 +42,7 @@
                                                         <v-divider class="my-4"></v-divider>
                                                     </v-layout>
                                                     <v-layout row wrap justify-space-between="">
-                                                        <v-flex xs12 md6>
+                                                        <v-flex xs12 md6 lg7>
                                                             <v-select
                                                                 :items="loadedData.holders"
                                                                 item-text="titleHolder"
@@ -53,7 +53,7 @@
                                                                 return-object
                                                             ></v-select>
                                                         </v-flex>
-                                                        <v-flex xs12 md5>
+                                                        <v-flex xs12 md5 lg4>
                                                             <v-layout row wrap justify-center>
                                                               <create-holder-dialog></create-holder-dialog>
                                                             </v-layout>
