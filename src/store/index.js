@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         sagas: [],
-        saga: {}
+        saga: {},
+        categorys: []
     },
     mutations: {
         setSagaData (state, payload) {
@@ -18,12 +19,22 @@ export const store = new Vuex.Store({
             payload.forEach(element => {
                 state.sagas.push(element)
             });
+        },
+        setCategorys (state, payload) {
+            payload.forEach(element => {
+                state.categorys.push(element)
+            });
         }
     },
     actions: {
         loadSagasInfo ({commit}) {
             axios.post("http://localhost/Odr/connections/getSaga.php").then(response => {
                 commit('setSagas', response.data)
+            })
+        },
+        loadCategorys ({commit}) {
+            axios.post("http://localhost/Odr/connections/getCategorys.php").then(response => {
+                commit('setCategorys', response.data)
             })
         },
         loadSagaData ({commit, getters}, idSaga) {
@@ -53,9 +64,7 @@ export const store = new Vuex.Store({
                     data.holders.forEach(element => {
                         let rutaBase = 'http://localhost/Odr/';
                         let rutaThumbnail = '';
-                        if (element.thumbnail) {
-                            rutaThumbnail = rutaBase + element.nomCategoria + '/' + element.idScanHolder + '/thumbnail.jpg'
-                        }
+                        rutaThumbnail = rutaBase + element.nomCategoria + '/' + element.idScanHolder + '/thumbnail.jpg'
                         //obtener tags
                         let tagsT = []
                         element.tags.forEach(elementTag => {
@@ -112,6 +121,9 @@ export const store = new Vuex.Store({
         },
         getSagas (state) {
             return state.sagas
+        },
+        getCategorys (state) {
+            return state.categorys
         }
     }
 })
