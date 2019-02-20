@@ -5,7 +5,7 @@
     <v-btn color="info" flat outline block slot="activator">CREATE SAGA</v-btn>
     <v-card>
       <v-card-title primary-title>
-        <v-layout row wrap>
+        <v-layout row wrap style="margin-bottom: -20px;">
           <v-flex xs12>
             <v-layout row wrap justify-space-between fill-height align-center>
               <div class="headline">Create Saga</div>
@@ -14,13 +14,14 @@
               </v-btn>
             </v-layout>
           </v-flex>
-          <v-flex xs12>
-            <v-divider class="my-2"></v-divider>
-          </v-flex>
         </v-layout>
       </v-card-title>
       <v-card-text>
-        <v-layout row wrap>
+        <v-layout row wrap style="margin-top: -20px;">
+          <v-flex xs12>
+            <v-subheader>Saga Information</v-subheader>
+            <v-divider class="mb-2"></v-divider>
+          </v-flex>
           <v-flex xs12>
             <v-text-field
               box
@@ -39,7 +40,7 @@
               <v-layout row wrap class justify-center>
                   <v-flex xs12>
                       <v-img
-                      src="http://localhost/Odr/resources/15-1-2019-2-20-45.jpg"
+                      :src="newSaga.backgroundPic"
                       max-height="450" style="min-height: 240px;" ref="imagen">
                       <!--  -->
                       <v-layout row wrap justify-center fill-height align-end>
@@ -47,12 +48,12 @@
                               <v-layout row wrap>
                                   <v-flex xs12>
                                       <v-layout row wrap justify-center fill-height align-end>
-                                          <v-flex xs6 sm4 md5 xl2>
+                                          <v-flex xs6 sm4 md5 xl4>
                                               <v-card class="pa-2">
                                                   <v-layout row wrap>
                                                       <v-flex xs12>
                                                           <v-img contain
-                                                              src="http://localhost/Odr/resources/55225.jpg">
+                                                              :src="newSaga.coverPic">
                                                           </v-img>
                                                       </v-flex>
                                                   </v-layout>
@@ -62,9 +63,9 @@
                                   </v-flex>
                                   <v-flex xs12 style="margin-bottom: -5px; margin-top: -5px;">
                                       <v-layout row wrap justify-center fill-height align-end text-xs-center>
-                                          <v-flex xs12 md4>
+                                          <v-flex xs12 md4 lg10>
                                               <v-card>
-                                                  <div :class="{'display-1': !$vuetify.breakpoint.xsOnly, 'subheading': $vuetify.breakpoint.xsOnly}">
+                                                  <div :class="{'headline': !$vuetify.breakpoint.xsOnly, 'subheading': $vuetify.breakpoint.xsOnly}">
                                                       {{ newSaga.title }}
                                                   </div>
                                               </v-card>
@@ -91,7 +92,9 @@ export default {
     return {
       dialog: false,
       newSaga: {
-        title: ''
+        title: '',
+        coverPic: 'http://localhost/Odr/resources/55225.jpg',
+        backgroundPic: 'http://localhost/Odr/resources/15-1-2019-2-20-45.jpg',
       }
     }
   }
