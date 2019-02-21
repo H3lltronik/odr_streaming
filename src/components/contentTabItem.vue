@@ -59,6 +59,7 @@ export default {
         contentFilter () {
             let res = []
             this.content.forEach(element => {
+                console.log(element)
                 if (element.type === this.type) {
                     res.push(element)
                 }

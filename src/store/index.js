@@ -56,11 +56,13 @@ export const store = new Vuex.Store({
 
                 if (Array.isArray(data.infoSaga.categoriasSaga)) {
                     data.infoSaga.categoriasSaga.forEach(element => {
-                        saga.categorys.push(element.nomCategoria)
+                        console.log("NOMAMEEEES", element)
+                        saga.categorys.push(element)
                     });
                 }
 
                 if (Array.isArray(data.holders)) {
+                    console.log("WARD", data.holders)
                     data.holders.forEach(element => {
                         let rutaBase = 'http://localhost/Odr/';
                         let rutaThumbnail = '';
@@ -97,6 +99,9 @@ export const store = new Vuex.Store({
                         });
 
                         console.log("Scans", scans)
+
+                        console.log("WARD 2", element.idScanHolder, element.nomCategoria, element.titleHolder,
+                            element.descriptionHolder, scans, tagsT, rutaThumbnail)
 
                     saga.content.push({
                             idHolder: element.idScanHolder,

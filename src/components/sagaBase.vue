@@ -88,6 +88,7 @@ export default {
     },
     computed: {
         categorys () {
+            console.log("CONTENT: ", this.$store.getters.getSagaData.categorys)
             return this.$store.getters.getSagaData.categorys
         },
         photoInfo () {
@@ -103,9 +104,10 @@ export default {
             return this.$store.getters.getSagaData.name
         },
         content () {
+            console.log("CONTENT: ", this.$store.getters.getSagaData.content)
             return this.$store.getters.getSagaData.content
         }
-    }
+    },
 }
 </script>
 
