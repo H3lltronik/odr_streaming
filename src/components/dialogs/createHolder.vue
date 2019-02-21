@@ -190,8 +190,8 @@
           })
       },
       removeBase64Headers (base64) {
-            return base64.substr(base64.indexOf(',') + 1)
-        }
+          return base64.substr(base64.indexOf(',') + 1)
+      }
     },
     computed: {
       loadedSagas () {

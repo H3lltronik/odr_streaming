@@ -100,7 +100,7 @@
           </v-card>
           </v-flex>
           <v-flex xs12>
-            <v-btn color="success" block>CREATE HOLDER</v-btn>
+            <v-btn color="success" block @click="saveHolder">CREATE HOLDER</v-btn>
           </v-flex>
         </v-layout>
       </v-card-text>
@@ -114,9 +114,6 @@ export default {
     return {
       dialog: false,
       newSaga: {
-        title: '',
-        coverPic: 'http://localhost/Odr/resources/55225.jpg',
-        backgroundPic: 'http://localhost/Odr/resources/15-1-2019-2-20-45.jpg',
         title: 'Titulo Vacio',
         coverPic: 'http://localhost/Odr/resources/55225.jpg',
         bgPic: 'http://localhost/Odr/resources/15-1-2019-2-20-45.jpg'
@@ -165,6 +162,19 @@ export default {
     },
     changeBG (src) {
       this.newSaga.bgPic = src
+    },
+    saveHolder () {
+        let bodyFormData = new FormData()
+        bodyFormData.set('tituloSaga', this.newSaga.title)
+        bodyFormData.set('coverPic', this.removeBase64Headers(this.newSaga.coverPic))
+        bodyFormData.set('bgPic', this.removeBase64Headers(this.newSaga.bgPic))
+
+        this.axios.post('http://localhost/Odr/connections/createSaga.php', bodyFormData).then(response => {
+            console.log(response)
+        })
+    },
+    removeBase64Headers (base64) {
+        return base64.substr(base64.indexOf(',') + 1)
     }
   }
 }
