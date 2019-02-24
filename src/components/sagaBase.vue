@@ -14,7 +14,7 @@
                                     <v-layout row wrap>
                                         <v-flex xs12>
                                             <v-layout row wrap justify-center fill-height align-end>
-                                                <v-flex xs6 sm4 md3 xl2>
+                                                <v-flex xs4 sm4 md3 xl2>
                                                     <v-card class="pa-2">
                                                         <v-layout row wrap>
                                                             <v-flex xs12>

@@ -5,6 +5,7 @@ import holderBase from '@/components/holderBase.vue'
 import sagaBase from '@/components/sagaBase.vue'
 import mediaPlayer from '@/components/mediaPlayer.vue'
 import StreamingMainPage from '@/components/streamingMain.vue'
+import PersonajeBase from '@/components/personajeBase.vue'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/sagas/:idSaga/:idHolder/:idScan/:nPagina',
       name: 'Media player',
       component: mediaPlayer
+    },
+    {
+      path: '/characters/:idCharacter',
+      name: 'Character information',
+      component: PersonajeBase 
     }
   ],
   mode: 'history'

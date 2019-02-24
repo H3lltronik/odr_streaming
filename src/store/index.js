@@ -8,7 +8,7 @@ export const store = new Vuex.Store({
     state: {
         sagas: [],
         saga: {},
-        categorys: []
+        categorys: [],
     },
     mutations: {
         setSagaData (state, payload) {
@@ -56,7 +56,6 @@ export const store = new Vuex.Store({
 
                 if (Array.isArray(data.infoSaga.categoriasSaga)) {
                     data.infoSaga.categoriasSaga.forEach(element => {
-                        console.log("NOMAMEEEES", element)
                         saga.categorys.push(element)
                     });
                 }
@@ -98,17 +97,23 @@ export const store = new Vuex.Store({
                             contScans++;
                         });
 
-                        console.log("Scans", scans)
-
-                        console.log("WARD 2", element.idScanHolder, element.nomCategoria, element.titleHolder,
-                            element.descriptionHolder, scans, tagsT, rutaThumbnail)
-
-                    saga.content.push({
+                        // Obtener personajes
+                        let characters = []
+                        element.characters.forEach(elementChar => {
+                            characters.push({
+                                id: elementChar.idPersonaje,
+                                name: elementChar.nomPersonaje,
+                                thumbnail: "http://localhost/Odr/Characters/" + elementChar.idPersonaje + "/profile.jpg"
+                            })
+                        });
+                        // Incluir todo los elementos sacados anteriormente
+                        saga.content.push({
                             idHolder: element.idScanHolder,
                             type: element.nomCategoria,
                             title: element.titleHolder,
                             description: element.descriptionHolder,
                             scans: scans,
+                            characters: characters,
                             tags: tagsT,
                             thumbnail: rutaThumbnail
                         })

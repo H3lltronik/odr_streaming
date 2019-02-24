@@ -73,6 +73,96 @@
                     </v-flex>
                     <v-flex xs12>
                       <v-layout row wrap fill-height align-center style="margin-top: -20px;">
+                        <v-flex xs4 md3>
+                          <v-subheader>Holder characters</v-subheader>
+                        </v-flex>
+                        <v-flex xs8 md9>
+                          <v-divider></v-divider>
+                        </v-flex>
+                      </v-layout>
+                    </v-flex>
+                    <!-- Autocomplete de personajes  -->
+                    <v-flex xs12>
+                      <v-layout row wrap justify-space-between fill-height align-center>
+                        <v-flex xs12 lg10>
+                          <v-autocomplete :items="characters" item-text="name" v-model="selectedChar"
+                            return-object single-line prepend-icon="face">
+                            <!-- Este slot personaliza la forma en la que se muestran en la barra -->
+                            <template slot="selection" slot-scope="data">
+                              <v-layout row wrap fill-height align-center>
+                                <v-flex xs1>
+                                  <v-avatar size="25px">
+                                    <img :src="data.item.thumbnail"/>
+                                  </v-avatar>
+                                </v-flex>
+                                <v-flex xs10 class='pl-1'>
+                                  {{data.item.name}}
+                                </v-flex>
+                              </v-layout>
+                            </template>
+                            <!-- Este slot personaliza los items del select -->
+                            <!-- Aparentemente el slot-scope="data" me da acceso a la info del slot item -->
+                            <template slot="item" slot-scope="data">
+                              <v-list-tile-avatar tile>
+                                <img :src="data.item.thumbnail" />
+                              </v-list-tile-avatar>
+                              <v-list-tile-content>
+                                <v-list-tile-title>
+                                  {{data.item.name}}
+                                </v-list-tile-title>
+                              </v-list-tile-content>
+                            </template>
+
+                          </v-autocomplete>
+                        </v-flex>
+                        <v-flex xs12 lg1>
+                          <v-btn color="success" fab small flat @click="addNewCharList">
+                            <v-icon>add</v-icon>
+                          </v-btn>
+                        </v-flex>
+                      </v-layout>
+                    </v-flex>
+                    <!-- Aca se muestran los personajes que ya se hayan elegido -->
+                    <!-- Separador -->
+                    <v-flex xs12 v-if="allSelectedChar.length > 0">
+                      <v-layout row wrap fill-height align-center style="margin: -10px 0 -10px 0;">
+                        <v-flex xs4 md3>
+                          <v-subheader>Selected characters</v-subheader>
+                        </v-flex>
+                        <v-flex xs8 md9>
+                          <v-divider></v-divider>
+                        </v-flex>
+                      </v-layout>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-list>
+                        <v-list-tile avatar v-for="(aux, index) in allSelectedChar" :key="index">
+                          <v-layout row wrap style="background-color: rgba(0,0,0,0.2)">
+                            <v-flex xs1>
+                              <v-list-tile-avatar>
+                                <img :src="aux.thumbnail">
+                              </v-list-tile-avatar>
+                            </v-flex>
+                            <v-flex xs5>
+                              <v-list-tile-content>
+                                <v-list-tile-title>{{ aux.name }}</v-list-tile-title>
+                              </v-list-tile-content>
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                            <v-list-tile-action>
+                              <v-btn color="red" small fab flat @click="remFromSelected (aux)">
+                                <v-icon>remove</v-icon>
+                              </v-btn>
+                            </v-list-tile-action>
+                          </v-layout>
+                        </v-list-tile>
+                      </v-list>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-btn color="info" flat>Create Character</v-btn>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-layout row wrap fill-height align-center style="margin-top: -10px;">
                         <v-flex xs4 md2>
                           <v-subheader>Holder cover</v-subheader>
                         </v-flex>
@@ -149,8 +239,14 @@
           category: {},
           saga: {},
           coverPic: 'https://homuapp.000webhostapp.com/Imagenes/24-11-2018-14-54-14.jpg'
-        }
+        },
+        characters: [],
+        selectedChar: {},
+        allSelectedChar: []
       }
+    },
+    mounted () {
+      this.loadCharacters ()
     },
     methods: {
       onCoverSelect () {
@@ -175,6 +271,12 @@
         this.newHolder.coverPic = src
       },
       saveHolder () {
+
+        let allSelectedCharIds = []
+        this.allSelectedChar.forEach(element => {
+          allSelectedCharIds.push(element.idCharacter)
+        });
+
           let bodyFormData = new FormData()
           bodyFormData.set('idSaga', this.newHolder.saga.idSaga)
           bodyFormData.set('titleHolder', this.newHolder.title)
@@ -182,8 +284,7 @@
           bodyFormData.set('category', this.newHolder.category.idCategoria)
           bodyFormData.set('nomCategory', this.newHolder.category.nomCategoria)
           bodyFormData.set('thumbnail', this.removeBase64Headers(this.newHolder.coverPic))
-
-        //   console.log("New Holder", this.newHolder)
+          bodyFormData.set('idChar', JSON.stringify(allSelectedCharIds))
 
           this.axios.post('http://localhost/Odr/connections/createHolder.php', bodyFormData).then(response => {
               console.log(response)
@@ -191,6 +292,33 @@
       },
       removeBase64Headers (base64) {
           return base64.substr(base64.indexOf(',') + 1)
+      },
+      loadCharacters () {
+        this.axios.post('http://localhost/Odr/connections/getAllCharacters.php').then(response => {
+              console.log(response)
+              response.data.forEach(element => {
+                this.characters.push({
+                  thumbnail: 'http://localhost/Odr/Characters/' + element.idPersonaje + "/profile.jpg",
+                  idCharacter: element.idPersonaje,
+                  name: element.nomPersonaje
+                })
+              });
+              console.log("Characters", this.characters)
+          })
+      },
+      // Añadir el personaje seleccionado a un arreglo donde estararn todos los seleccionados
+      addNewCharList () {
+        let auxChar = this.allSelectedChar.find(aux => aux === this.selectedChar)
+        if (auxChar) {
+          console.log("Ya elegiste a este, wey")  
+        } else {
+          this.allSelectedChar.push(this.selectedChar)
+        }
+        console.log("Selected:",this.selectedChar)
+      },
+      // Quitar un personaje del arreglo donde estan todos los seleccionados
+      remFromSelected (character) {
+        this.allSelectedChar.splice(this.allSelectedChar.indexOf(character), 1)
       }
     },
     computed: {

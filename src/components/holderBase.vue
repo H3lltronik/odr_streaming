@@ -11,7 +11,7 @@
                         <v-flex xs10 md7 >
                             <v-layout row wrap :justify-center="smAndDown" :class="{'mt-4' : xsOnly}">
                                 <div :class="{'display-1': !xsOnly, 'title': xsOnly}">
-                                    NOMBREEEE</div>
+                                    {{currentContent.title}}</div>
                             </v-layout>
                             <v-divider class="mt-2 mb-1" style="background: #000"></v-divider>
                             <v-layout row wrap align-center>
@@ -22,6 +22,7 @@
                                         </v-layout>
                                     </v-flex>
                                     <v-flex xs12 class="mt-1">
+                                        <v-divider class="mb-1"></v-divider>
                                         <v-layout row wrap align-center>
                                             <div class="body-1 font-weight-medium">Tags:</div>
                                             <v-chip class="" :small="xsOnly" v-for="(aux, index) in currentContent.tags" :key="index">
@@ -30,9 +31,42 @@
                                         </v-layout>
                                     </v-flex>
                                     <v-flex xs12 class="mt-1">
+                                        <v-divider class="mb-1"></v-divider>
                                         <v-layout row wrap align-center>
                                             <div class="body-1 font-weight-medium mr-1">Description: </div>
                                             <div class="body-1"> {{currentContent.description}} </div>
+                                        </v-layout>
+                                    </v-flex>
+                                    <v-flex xs12 class="mt-1">
+                                        <v-layout row wrap align-center>
+                                            <v-flex xs12>
+                                                <v-divider class="mb-1"></v-divider>
+                                                <v-layout row wrap>
+                                                    <div class="body-1 font-weight-medium mr-1">Characters: </div>
+                                                </v-layout>
+                                            </v-flex>
+                                            <v-flex xs12 class="mt-2 ml-2">
+                                                <v-layout row class="myContainer">
+                                                    <!-- Componente avatar ?   -->
+                                                    <v-flex xs3 md3 lg2 xl1 v-for="(aux, index) in currentContent.characters" :key="index" 
+                                                        :class="{'ml-4' : index > 1 && xsOnly, 'ml-3' : index > 1 && !xsOnly}">
+                                                        <v-layout column align-center >
+                                                            <v-avatar
+                                                                size="60"
+                                                                color="white"
+                                                                style="cursor: pointer; overflow: hidden;"
+                                                                tile
+                                                                @click="goToCharacter (aux.id)">
+                                                                <img style="height: 80px; width: 60px;"
+                                                                :src="aux.thumbnail" alt="alt">
+                                                            </v-avatar>
+                                                            <div class="body-1 mx-1" style="background-color: rgba(0,0,0,0.2)">
+                                                                {{aux.name}}
+                                                            </div>
+                                                        </v-layout>
+                                                    </v-flex>
+                                                </v-layout>
+                                            </v-flex>
                                         </v-layout>
                                     </v-flex>
                             </v-layout>
@@ -152,6 +186,9 @@ export default {
     methods: {
         goToScan (idScan) {
             this.$router.push(this.idHolder + "/" + idScan + "/1")
+        },
+        goToCharacter (idChar) {
+            this.$router.push("/characters/" + idChar)
         }
     }
 }
@@ -160,5 +197,10 @@ export default {
 <style>
     .vCardStyle {
         border-radius: 30px;
+    }
+
+    .myContainer{
+        overflow-y: hidden;
+        overflow-x: auto;
     }
 </style>

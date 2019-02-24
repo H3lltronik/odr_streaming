@@ -1,12 +1,12 @@
 <template>
   <v-container grid-list-xs>
     <v-layout row wrap justify-center>
-      <v-flex xs10>
+      <v-flex xs12 md11>
         <v-layout column>
           <v-flex xs12>
             <div class="title black--text font-weight-light my-2">Sagas</div>
-            <v-layout row wrap text-sm-center justify-center="" v-if="sagasLength >= 0">
-              <v-img height="160" max-width="200" v-for="aux in 6" :key="aux" class="mr-3 boxContent"
+            <v-layout row text-xs-center :justify-center="!xsOnly" class="verticalSlider" v-if="sagasLength >= 0">
+              <v-img height="160" width="200" v-for="aux in 6" :key="aux" class="mr-3 boxContent"
               @click="goToSaga (sagas[aux-1].idSaga)"
               :src="sagas[aux-1].thumbnailSaga">
                 <v-layout row wrap fill-height align-end>
@@ -32,6 +32,7 @@
 export default {
   data () {
     return {
+      xsOnly: this.$vuetify.breakpoint.xsOnly,
     }
   },
   created () {
@@ -78,5 +79,10 @@ export default {
   .boxContent {
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  .verticalSlider {
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 </style>
