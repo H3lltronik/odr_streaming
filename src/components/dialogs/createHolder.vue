@@ -159,7 +159,7 @@
                       </v-list>
                     </v-flex>
                     <v-flex xs12>
-                      <v-btn color="info" flat>Create Character</v-btn>
+                      <create-character-dialog></create-character-dialog>
                     </v-flex>
                     <v-flex xs12>
                       <v-layout row wrap fill-height align-center style="margin-top: -10px;">
