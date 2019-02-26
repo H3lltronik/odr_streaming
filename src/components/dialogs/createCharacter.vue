@@ -32,12 +32,14 @@
                     </v-flex>
                     <v-flex xs12>
                         <v-text-field
+                            v-model="newCharacter.name"
                             name="name"
                             label="Name">
                         </v-text-field>
                     </v-flex>
                     <v-flex xs12>
-                        <v-textarea name="name" label="Description">
+                        <v-textarea name="name" label="Description"
+                            v-model="newCharacter.description">
                         </v-textarea>
                     </v-flex>
                     <v-flex xs12>
@@ -105,6 +107,9 @@
                             <v-btn color="error" @click="resetImages()" v-if=(selected)>Remove all images</v-btn>
                         </v-layout>
                     </v-flex>
+                    <v-flex xs12>
+                        <v-btn color="success" block @click="createCharacter">CREATE CHARACTER</v-btn>
+                    </v-flex>
                 </v-layout>
             </v-card-text>
         </v-card>
@@ -134,8 +139,36 @@ export default {
         }
     },
     methods: {
+        createCharacter () {
+            let bodyFormData = new FormData ()
+            //Reset array
+            this.newCharacter.imagesNoHeader = []
+            //Quitar header del base64
+            this.newCharacter.images.forEach(element => {
+                this.newCharacter.imagesNoHeader.push(this.removeBase64Headers(element.src))
+            });
+
+            let cover = this.newCharacter.images.find((element) => {
+                return (element.thumbnail === true)
+            })
+
+            bodyFormData.set ('charName', this.newCharacter.name)
+            bodyFormData.set ('charDesc', this.newCharacter.description)
+            bodyFormData.set('charPics', JSON.stringify(this.newCharacter.imagesNoHeader))
+            bodyFormData.set('profilePic', this.removeBase64Headers(cover.src))
+            bodyFormData.set('nPaginas', this.newCharacter.images.length)
+
+            this.axios.post('http://localhost/Odr/connections/createCharacter.php', bodyFormData).then(response => {
+                console.log(response)
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+        removeBase64Headers (base64) {
+            return base64.substr(base64.indexOf(',') + 1)
+        },
+        // De aqui para abajo son puros metodos del carousel
         getImageByIndex (index, outerLoop) {
-            console.log("getImageByIndex", index, outerLoop)
             index = this.getLoopIndex(index, outerLoop)
             if(this.newCharacter.images[index-1] !== null && this.newCharacter.images[index-1] !== undefined){
                 return this.newCharacter.images[index-1]

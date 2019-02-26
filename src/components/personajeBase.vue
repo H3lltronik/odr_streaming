@@ -123,18 +123,20 @@ export default {
             }
 
             let holdersArray = response.data.related
-            holdersArray.forEach(element => {
-                
-                let aux = {
-                    idPersonaje: element.idPersonaje,
-                    idSaga: element.idSaga,
-                    idScanHolder: element.idScanHolder,
-                    categoria: element.nomCategoria,
-                    titulo: element.titleHolder,
-                    thumbnail: "http://localhost/Odr/Manga/"+element.idScanHolder+"/thumbnail.jpg"
-                    }
-                this.holders.push(aux)
-            });
+            if (Array.isArray(holdersArray)){
+                let context = this;
+                holdersArray.forEach(element => {
+                    let aux = {
+                        idPersonaje: element.idPersonaje,
+                        idSaga: element.idSaga,
+                        idScanHolder: element.idScanHolder,
+                        categoria: element.nomCategoria,
+                        titulo: element.titleHolder,
+                        thumbnail: "http://localhost/Odr/Manga/"+element.idScanHolder+"/thumbnail.jpg"
+                        }
+                    context.holders.push(aux)
+                });
+            }
             this.loaded = true
         })
     },
