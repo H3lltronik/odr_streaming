@@ -15,6 +15,26 @@
                                                 <form class="mt-2">
                                                     <!-- Separacion -->
                                                     <v-layout row justify-center>
+                                                        <v-subheader>Content type</v-subheader>
+                                                        <v-divider class="my-4"></v-divider>
+                                                    </v-layout>
+                                                    <v-flex xs12>
+                                                        <v-radio-group v-model="contentType" row>
+                                                            <v-layout row wrap fill-height align-center justify-space-between>
+                                                                <v-radio label="label" value="0" >
+                                                                    <div slot="label">Image</div>
+                                                                </v-radio>
+                                                                <v-radio label="label" value="1">
+                                                                    <div slot="label">Video</div>
+                                                                </v-radio>
+                                                                <v-radio label="label" value="2">
+                                                                    <div slot="label">Music</div>
+                                                                </v-radio>
+                                                            </v-layout>
+                                                        </v-radio-group>
+                                                    </v-flex>
+                                                    <!-- Separacion -->
+                                                    <v-layout row justify-center>
                                                         <v-subheader>Saga selector</v-subheader>
                                                         <v-divider class="my-4"></v-divider>
                                                     </v-layout>
@@ -111,8 +131,6 @@
                                                         <v-subheader>Images Upload</v-subheader>
                                                         <v-divider class="my-4"></v-divider>
                                                     </v-layout>
-                                                    <v-btn raised block color="primary" @click="onPickFile">Choose Files</v-btn>
-                                                    <input multiple type="file" ref="fileInput" style="display: none;" accept="image/*" @change="onFilePicked">
                                                 </form>
                                             </v-layout>
                                         </v-container>
@@ -123,15 +141,20 @@
                             <v-divider class="hidden-xs-only" vertical></v-divider>
                             <v-flex xs12 md5>
                                 <v-divider class="hidden-sm-and-up mb-3"></v-divider>
-                                <v-layout row wrap justify-center>
-                                    <div class="headline">Images Preview</div>
-                                    <v-flex xs12>
+                                <div class="headline">{{typeOfContent[contentType]}} Preview</div>
+                                <v-flex xs12>
+                                    <v-btn raised block color="primary" @click="onPickFile">Choose Files</v-btn>
+                                    <input multiple type="file" ref="fileInput" style="display: none;" accept="image/*" @change="onFilePicked">
+                                </v-flex>
+                                <v-layout row wrap justify-center fill-height>
+                                    <v-flex xs12 class="my-auto">
                                         <v-img
                                             :src="coverPic"
                                             contain
-                                            max-height="450">
+                                            max-height="350">
                                         </v-img>
-
+                                    </v-flex>
+                                    <v-flex xs12 :class="{'pb-4': $vuetify.breakpoint.smAndDown}">
                                         <v-carousel :cycle="false" hide-delimiters
                                             interval="9999999" height="130" light
                                             class="mt-2" v-if="selected">
@@ -233,7 +256,10 @@ export default {
                     'Magazine'
                 ]
             },
-            IPLocalHost: 'localhost'
+            IPLocalHost: 'localhost',
+            typeOfContent: ['Image', 'Video', 'Music'],
+            // Este sera el index, 0, 1 o 2, va en los radiobutton
+            contentType: '0',
         }
     },
     methods: {
@@ -323,7 +349,9 @@ export default {
                 this.newBook.images[i].index--
                 this.imagesIndexModel[i].index--
             }
+            console.log('imgsIndex A', this.imgsIndex)
             this.imgsIndex--
+            console.log('imgsIndex D', this.imgsIndex)
         },
         getHolders (idSaga) {
           let bodyFormData = new FormData()
@@ -393,10 +421,12 @@ export default {
             return mask
         },
         checkTypedIndex (index, outerLoop, newValue) {
-            console.log('Checkin...')
+            console.log('imgsIndex', this.imgsIndex)
+            console.log('newValue', newValue)
+            console.log('index', index)
             index = this.getLoopIndex(index, outerLoop) - 1
             let oldValue = this.newBook.images[index].index
-            if (newValue > this.imgsIndex) {
+            if (newValue > this.imgsIndex-1) {
                 console.log('Way too big', oldValue, newValue, this.imagesIndexModel)
                 this.imagesIndexModel[index].index = oldValue
                 console.log('Way too big', oldValue, newValue, this.imagesIndexModel)
@@ -492,6 +522,7 @@ export default {
                   });
                 })
               }
+            //   Comprobar que todos los campos hayan sido llenados para poder subir el contenido
                 this.setReadyToUpload(true)
                 if (val.images.length <= 0)
                     this.selected = false
@@ -510,5 +541,9 @@ export default {
 
     .centered-input input:focus {
         caret-color: white;
+    }
+
+    .v-input--selection-controls .v-input__control {
+        width: 1000px !important;
     }
 </style>

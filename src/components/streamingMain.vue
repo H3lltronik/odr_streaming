@@ -1,12 +1,14 @@
 <template>
-  <v-container grid-list-xs>
+  <v-container grid-list-xs v-resize="onResize">
     <v-layout row wrap justify-center>
       <v-flex xs12 md11>
         <v-layout column>
           <v-flex xs12>
             <div class="title black--text font-weight-light my-2">Sagas</div>
-            <v-layout row text-xs-center :justify-center="!xsOnly" class="verticalSlider" v-if="sagasLength >= 0">
-              <v-img height="160" width="200" v-for="aux in 6" :key="aux" class="mr-3 boxContent"
+            <v-layout row text-xs-center :justify-center="sagasJustifyCenter" 
+              class="verticalSlider" v-if="sagasLength >= 0">
+              <v-img :height="sagaItemHeight" :width="sagaItemWidth" max-width="300"
+              v-for="aux in sagaItems" :key="aux" class="mr-3 boxContent"
               @click="goToSaga (sagas[aux-1].idSaga)"
               :src="sagas[aux-1].thumbnailSaga">
                 <v-layout row wrap fill-height align-end>
@@ -33,6 +35,14 @@ export default {
   data () {
     return {
       xsOnly: this.$vuetify.breakpoint.xsOnly,
+      // Elementos del scroll horizontal donde se muestran las sagas
+      sagaItemWidth: 200,
+      sagaItemHeight: 160,
+      sagaItems: 6,
+      windowSize: {
+        x: 0,
+        y: 0
+      },
     }
   },
   created () {
@@ -44,6 +54,10 @@ export default {
     goToSaga (idSaga) {
       if (idSaga !== '')
         this.$router.push("sagas/" + idSaga)
+    },
+    //Para obtener las medidas de la ventana
+    onResize () {
+      this.windowSize = { x: window.innerWidth, y: window.innerHeight }
     }
     },
   computed: {
@@ -70,12 +84,23 @@ export default {
       }else{
         return aux
       }
+    },
+    // Si el tamaño de la ventana es menor al del total del tamaño de todas las sagas
+    sagasJustifyCenter () {
+      if (this.windowSize.x < (this.sagaItems * this.sagaItemWidth)) {
+        return false
+      } else {
+        return true
+      }
     }
+  },
+  watch: {
+
   }
 }
 </script>
 
-<style lang="">
+<style>
   .boxContent {
     border-radius: 5px;
     cursor: pointer;
