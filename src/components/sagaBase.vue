@@ -8,7 +8,7 @@
                             <v-img
                             :src="photoInfo.background"
                             max-height="450" style="min-height: 240px;" ref="imagen">
-                            <!--  -->
+                            <!-- Esto se ve chido -->
                             <v-layout row wrap justify-center fill-height align-end>
                                 <v-flex xs12>
                                     <v-layout row wrap>
