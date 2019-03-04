@@ -28,6 +28,15 @@
                         <v-flex xs12>
                             <v-text-field
                                 box
+                                v-model="currConfig.nickname"
+                                name="nombre"
+                                :label="placeholders.nickname[currConfig.idioma]"
+                                id="id">
+                            </v-text-field>
+                        </v-flex>
+                        <v-flex xs12>
+                            <v-text-field
+                                box
                                 v-model="currConfig.descripcion"
                                 name="nombre"
                                 :label="placeholders.descripcion[currConfig.idioma]"
@@ -79,7 +88,7 @@
                             </v-radio-group>
                         </v-flex>
                         <v-flex xs12>
-                            <v-btn color="success">Guardar configuracion</v-btn>
+                            <v-btn color="success" @click="saveConfiguration">Guardar configuracion</v-btn>
                         </v-flex>
                     </v-layout>
                 </v-card-text>
@@ -94,6 +103,7 @@ export default {
         return {
             placeholders: {
                 nombre: ['Nombre real', 'Real name'],
+                nickname: ['Nickname', 'Nickname'],
                 descripcion: ['Descripcion', 'Description'],
                 sexo: ['Sexo', 'Gender'],
                 ubicacion: ['Ubicacion', 'Ubication'],
@@ -119,6 +129,9 @@ export default {
             }).catch(error => {
 
             })
+        },
+        saveConfiguration () {
+            this.$store.dispatch('saveUserConfiguration')
         }
     },
     computed: {
@@ -132,7 +145,7 @@ export default {
     },
     watch: {
       currConfig (newValue){
-        console.log(newValue);
+          console.log(data)        
       }
     }
 }

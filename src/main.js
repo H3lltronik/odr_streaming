@@ -44,21 +44,31 @@ Vue.use(Vuetify, { theme: {
   blush: '#e5b1c1'
 }})
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  template: '<App/>',
-  created () {
-    firebase.initializeApp({
-    apiKey: "AIzaSyCt8KOVPcyBES6-vVSBIZQgedl7fBPfR_w",
-    authDomain: "odr-streaming.firebaseapp.com",
-    databaseURL: "https://odr-streaming.firebaseio.com",
-    projectId: "odr-streaming",
-    storageBucket: "odr-streaming.appspot.com",
-    messagingSenderId: "50680997374"
-    });
-  }
+firebase.initializeApp({
+  apiKey: "AIzaSyCt8KOVPcyBES6-vVSBIZQgedl7fBPfR_w",
+  authDomain: "odr-streaming.firebaseapp.com",
+  databaseURL: "https://odr-streaming.firebaseio.com",
+  projectId: "odr-streaming",
+  storageBucket: "odr-streaming.appspot.com",
+  messagingSenderId: "50680997374"
+});
+
+firebase.auth().onAuthStateChanged(user => {
+  /* eslint-disable no-new */
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    components: { App },
+    template: '<App/>',
+    created () {
+      if (user)
+        this.$store.dispatch('autoSignIn', user)
+    }
+  })
+
+  
 })
+
+
+

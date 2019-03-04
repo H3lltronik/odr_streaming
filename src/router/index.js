@@ -10,9 +10,12 @@ import MainLogin from '@/components/login/mainLogin.vue'
 // Profile
 import Configuration from '@/components/profile/configuration.vue'
 
+import firebase from 'firebase'
+import AuthGuard from './auth-guard'
+
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -52,8 +55,12 @@ export default new Router({
     {
       path: '/profileConfiguration',
       name: 'Configuration',
-      component: Configuration 
+      component: Configuration,
+      beforeEnter: AuthGuard
     }
   ],
   mode: 'history'
 })
+
+
+export default router

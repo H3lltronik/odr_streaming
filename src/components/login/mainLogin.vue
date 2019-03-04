@@ -14,9 +14,14 @@ export default {
     methods: {
         googleLogIn () {
             this.$store.dispatch('googleSignIn')
+            let userconfig = this.$store.getters.getUserData.configuration
         }
     },
     created () {
+        let user = this.$store.getters.getUserData
+        if (user.id) {
+            this.$router.push('/profileConfiguration')
+        }
     }
 }
 </script>

@@ -39,7 +39,9 @@
         </v-avatar>
         <v-toolbar-title class='text-sm-right white--text font-weight-thin headline'>HomuApp!</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon ><v-icon class='white--text'>add_box</v-icon></v-btn>
+      <v-btn flat class="white--text" @click="logout">
+        Logout <v-icon>exit_to_app</v-icon>
+        </v-btn>
     </v-toolbar>
 
     <v-content>
@@ -62,6 +64,9 @@ export default {
     },
     gotoToPage (page) {
       this.$router.replace('/' + page)
+    },
+    logout () {
+      this.$store.dispatch('logout')
     }
   }
 }
