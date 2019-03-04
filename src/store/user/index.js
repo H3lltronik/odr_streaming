@@ -47,7 +47,7 @@ export default({
     actions: {
         googleSignIn ({commit, getters}) {
             commit ('setLoading', true)
-            
+
             var provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({
                 prompt: 'select_account'
@@ -55,7 +55,7 @@ export default({
             let bodyFormData = new FormData ()
             firebase.auth().signInWithPopup(provider).then(response => {
                 console.log("user email", response.user.email)
-                console.log("user id", response.user.uid) 
+                console.log("user id", response.user.uid)
                 //Asignar a user sus variables
                 let user = {
                     id: '',
@@ -71,7 +71,6 @@ export default({
 
                 axios.post("http://localhost/Odr/connections/userConnections/saveUser.php", bodyFormData).then(response => {
                     commit ('setLoading', false)
-                    router.push('/profileConfiguration')
                 }).catch(error => {
                     console.log(error)
                     commit ('setLoading', false)
@@ -102,12 +101,17 @@ export default({
 
             let user = getters.getUserData
             bodyFormData.set('userId', user.id)
-            
+
             axios.post("http://localhost/Odr/connections/userConnections/getUserConfig.php", bodyFormData).then(response => {
                 let data = response.data
                 console.log('data', data)
                 commit('setUserConfig', data)
                 console.log('getUserData', getters.getUserData)
+                if (getters.getUserData.configuration.configInicial === '0') {
+                  router.push('/profileConfiguration')
+                } else {
+                  router.push('/todoxido')
+                }
             }).catch(error => {
                 console.log(error)
             })
@@ -119,12 +123,12 @@ export default({
             let image = user.configuration.imagen
             user.configuration.id = user.id
             user.configuration.configInicial = 1
-            
+
             user.configuration.base64 = image.substr(image.indexOf(',') + 1)
 
             console.log('user', user.configuration)
             bodyFormData.set('configuration', JSON.stringify(user.configuration))
-            
+
             axios.post("http://localhost/Odr/connections/userConnections/saveConfiguration.php", bodyFormData).then(response => {
                 console.log('Response', response)
             }).catch(error => {

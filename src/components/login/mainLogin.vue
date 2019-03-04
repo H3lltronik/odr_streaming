@@ -18,15 +18,11 @@ export default {
         }
     },
     created () {
-        let user = this.$store.getters.getUserData
-        if (user.id) {
-            this.$router.push('/profileConfiguration')
-        }
     }
 }
 </script>
 
 <style>
-    
-</style> 
+
+</style>
 
