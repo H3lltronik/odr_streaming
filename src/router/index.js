@@ -6,10 +6,16 @@ import sagaBase from '@/components/sagaBase.vue'
 import mediaPlayer from '@/components/mediaPlayer.vue'
 import StreamingMainPage from '@/components/streamingMain.vue'
 import PersonajeBase from '@/components/personajeBase.vue'
+import MainLogin from '@/components/login/mainLogin.vue'
+// Profile
+import Configuration from '@/components/profile/configuration.vue'
+
+import firebase from 'firebase'
+import AuthGuard from './auth-guard'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -40,7 +46,21 @@ export default new Router({
       path: '/characters/:idCharacter',
       name: 'Character information',
       component: PersonajeBase 
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: MainLogin 
+    },
+    {
+      path: '/profileConfiguration',
+      name: 'Configuration',
+      component: Configuration,
+      beforeEnter: AuthGuard
     }
   ],
   mode: 'history'
 })
+
+
+export default router
