@@ -74,6 +74,7 @@ export default({
                     router.push('/profileConfiguration')
                 }).catch(error => {
                     console.log(error)
+                    router.push('/')
                     commit ('setLoading', false)
                 })
             }).catch(error => {
@@ -105,15 +106,15 @@ export default({
             
             axios.post("http://localhost/Odr/connections/userConnections/getUserConfig.php", bodyFormData).then(response => {
                 let data = response.data
-                console.log('data', data)
                 commit('setUserConfig', data)
-                console.log('getUserData', getters.getUserData)
+                console.log("DATA", data)
             }).catch(error => {
                 console.log(error)
             })
         },
         saveUserConfiguration ({commit, getters}) {
             let bodyFormData = new FormData ()
+            commit ('setLoading', true)
 
             let user = {...getters.getUserData}
             let image = user.configuration.imagen
@@ -126,8 +127,10 @@ export default({
             bodyFormData.set('configuration', JSON.stringify(user.configuration))
             
             axios.post("http://localhost/Odr/connections/userConnections/saveConfiguration.php", bodyFormData).then(response => {
-                console.log('Response', response)
+                alert("Actualizado correctamente")
+                commit ('setLoading', false)
             }).catch(error => {
+                commit ('setLoading', false)
                 console.log(error)
             })
         },
@@ -147,6 +150,7 @@ export default({
         },
         getUserData (state) {
             return state.user
-        }
+        },
+        
     }
 })

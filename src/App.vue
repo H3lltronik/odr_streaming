@@ -39,9 +39,13 @@
         </v-avatar>
         <v-toolbar-title class='text-sm-right white--text font-weight-thin headline'>HomuApp!</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn flat class="white--text" @click="logout">
+
+      <v-btn flat class="white--text" @click="logout" v-if="isUserLogged">
         Logout <v-icon>exit_to_app</v-icon>
-        </v-btn>
+      </v-btn>
+      <v-btn flat class="white--text" @click="logout" v-else>
+        Sign in <v-icon>input</v-icon>
+      </v-btn>
     </v-toolbar>
 
     <v-content>
@@ -67,6 +71,15 @@ export default {
     },
     logout () {
       this.$store.dispatch('logout')
+    }
+  },
+  computed: {
+    isUserLogged () {
+      if (this.$store.getters.getUserData.id !== '') {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }

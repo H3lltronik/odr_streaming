@@ -88,7 +88,8 @@
                             </v-radio-group>
                         </v-flex>
                         <v-flex xs12>
-                            <v-btn color="success" @click="saveConfiguration">Guardar configuracion</v-btn>
+                            <v-btn color="success" :loading="loading"
+                                @click="saveConfiguration">Guardar configuracion</v-btn>
                         </v-flex>
                     </v-layout>
                 </v-card-text>
@@ -123,13 +124,6 @@ export default {
         changePreview (src) {
             this.currConfig.imagen = src
         },
-        uploadConfig () {
-            this.$axios.post().then(response => {
-
-            }).catch(error => {
-
-            })
-        },
         saveConfiguration () {
             this.$store.dispatch('saveUserConfiguration')
         }
@@ -141,6 +135,11 @@ export default {
                 return data
             else 
                 return null
+        },
+        loading () {
+            if (this.$store.getters.getLoading) {
+                return this.$store.getters.getLoading
+            }
         }
     },
     watch: {
