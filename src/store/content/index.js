@@ -25,7 +25,7 @@ export default({
     },
     actions: {
         loadSagasInfo ({commit}) {
-            axios.post("http://localhost/Odr/connections/getSaga.php").then(response => {
+            axios.post("http://localhost/Odr/connections/streamingContent/getSaga.php").then(response => {
                 commit('setSagas', response.data)
             })
         },
@@ -45,17 +45,11 @@ export default({
             }
             bodyFormData.set('idSaga', idSaga)
             console.log(idSaga)
-            axios.post('http://localhost/Odr/connections/getSagaData.php', bodyFormData).then(response => {
+            axios.post('http://localhost/Odr/connections/streamingContent/getSagaContent.php', bodyFormData).then(response => {
                 let data = response.data
                 console.log("Data", data)
-                saga.name = data.infoSaga.tituloSaga
-                saga.photoInfo = {thumbnail: data.infoSaga.thumbnailSaga, background: data.infoSaga.backgroundSaga}
-
-                if (Array.isArray(data.infoSaga.categoriasSaga)) {
-                    data.infoSaga.categoriasSaga.forEach(element => {
-                        saga.categorys.push(element)
-                    });
-                }
+                saga.name = data.TituloSaga
+                saga.photoInfo = {thumbnail: data.ThumbnailSaga, background: data.BackgroundSaga}
 
                 if (Array.isArray(data.holders)) {
                     console.log("WARD", data.holders)

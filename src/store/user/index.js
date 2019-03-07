@@ -71,6 +71,7 @@ export default({
 
                 axios.post("http://localhost/Odr/connections/userConnections/saveUser.php", bodyFormData).then(response => {
                     commit ('setLoading', false)
+                    console.log(response)
                 }).catch(error => {
                     console.log(error)
                     commit ('setLoading', false)
@@ -107,10 +108,11 @@ export default({
                 console.log('data', data)
                 commit('setUserConfig', data)
                 console.log('getUserData', getters.getUserData)
+                //router.push('/profileConfiguration')
                 if (getters.getUserData.configuration.configInicial === '0') {
-                  router.push('/profileConfiguration')
+
                 } else {
-                  router.push('/todoxido')
+                  //router.push('/todoxido')
                 }
             }).catch(error => {
                 console.log(error)

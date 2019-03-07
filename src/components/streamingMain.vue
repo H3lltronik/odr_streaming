@@ -9,12 +9,12 @@
               class="verticalSlider" v-if="sagasLength >= 0">
               <v-img :height="sagaItemHeight" :width="sagaItemWidth" max-width="300"
               v-for="aux in sagaItems" :key="aux" class="mr-3 boxContent"
-              @click="goToSaga (sagas[aux-1].idSaga)"
-              :src="sagas[aux-1].thumbnailSaga">
+              @click="goToSaga (sagas[aux-1].URLSaga)"
+              :src="sagas[aux-1].ThumbnailSaga">
                 <v-layout row wrap fill-height align-end>
                   <div style="background-color: rgba(0, 0, 0, 0.5); width: 100%;">
                     <div class="title white--text font-weight-bold ml-2">
-                      {{sagas[aux-1].tituloSaga}}
+                      {{sagas[aux-1].TituloSaga}}
                     </div>
                   </div>
                 </v-layout>
@@ -51,9 +51,9 @@ export default {
     }
   },
   methods: {
-    goToSaga (idSaga) {
-      if (idSaga !== '')
-        this.$router.push("sagas/" + idSaga)
+    goToSaga (URLSaga) {
+      if (URLSaga !== '')
+        this.$router.push("sagas/" + URLSaga)
     },
     //Para obtener las medidas de la ventana
     onResize () {
