@@ -1,6 +1,7 @@
 <template>
     <v-layout row wrap :justify-center="1">
         <v-btn color="success" @click="googleLogIn">Login with Google</v-btn>
+        <v-btn color="blue" @click="facebookLogIn">Login with Facebook</v-btn>
     </v-layout>
 </template>
 
@@ -14,19 +15,17 @@ export default {
     methods: {
         googleLogIn () {
             this.$store.dispatch('googleSignIn')
-            let userconfig = this.$store.getters.getUserData.configuration
+        },
+        facebookLogIn () {
+            this.$store.dispatch('facebookSignIn')
         }
     },
     created () {
-        let user = this.$store.getters.getUserData
-        if (user.id) {
-            this.$router.push('/profileConfiguration')
-        }
     }
 }
 </script>
 
 <style>
-    
-</style> 
+
+</style>
 

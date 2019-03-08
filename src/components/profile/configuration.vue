@@ -72,9 +72,9 @@
                         </v-flex>
                         <v-flex xs12>
                         </v-flex>
-                        
+
                         <v-flex xs12>
-                            <v-switch :label="placeholders.notificaciones[currConfig.idioma]" 
+                            <v-switch :label="placeholders.notificaciones[currConfig.idioma]"
                                 v-model="currConfig.notificaciones">
                             </v-switch>
                         </v-flex>
@@ -117,7 +117,7 @@ export default {
                     español: ['Español', 'Spanish']
                 }
             },
- 
+
         }
     },
     methods: {
@@ -133,7 +133,7 @@ export default {
             let data = this.$store.getters.getUserData.configuration
             if (data)
                 return data
-            else 
+            else
                 return null
         },
         loading () {
@@ -144,12 +144,12 @@ export default {
     },
     watch: {
       currConfig (newValue){
-          console.log(data)        
+          console.log(data)
       }
     }
 }
 </script>
 
 <style>
-    
+
 </style>

@@ -20,11 +20,11 @@
                                         <v-flex xs12>
                                             <v-layout row wrap fill-height>
                                                 <v-flex xs12>
-                                                    <div class="headline">{{n.title}}</div>
+                                                    <div class="headline">{{n.name}}</div>
                                                     <v-divider class="my-1"></v-divider>
-                                                    <v-chip v-for="(tag, index) in n.tags" :key="index">{{tag}}</v-chip>
-                                                    <v-divider class="my-1" v-if="n.tags"></v-divider>
-                                                    <div class="body-2">{{n.description}}</div>
+                                                    <v-chip v-for="(tag, index) in n.Tags" :key="index">{{tag}}</v-chip>
+                                                    <v-divider class="my-1" v-if="n.Tags"></v-divider>
+                                                    <div class="body-2">{{n.Descripcion}}</div>
                                                 </v-flex>                                
                                             </v-layout>
                                         </v-flex>
@@ -32,7 +32,7 @@
                                             <v-layout row wrap align-end style="height: 100%;">
                                                 <v-flex xs12>
                                                     <v-btn color="primary" block flat 
-                                                    outline @click="goToHolder (n.idHolder)">VER</v-btn>
+                                                    outline @click="goToHolder (n.url)">VER</v-btn>
                                                 </v-flex>
                                             </v-layout>
                                         </v-flex>
@@ -64,12 +64,13 @@ export default {
                     res.push(element)
                 }
             });
+            console.log("RES ",res)
             return res
         }
     },
     methods: {
-        goToHolder (idHolder) {
-            this.$router.push(this.$route.params.idSaga + "/" + idHolder)
+        goToHolder (URLHolder) {
+            this.$router.push(this.$route.params.urlSaga + "/" + URLHolder)
         }
     }
 }

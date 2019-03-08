@@ -11,7 +11,7 @@
                         <v-flex xs10 md7 >
                             <v-layout row wrap :justify-center="smAndDown" :class="{'mt-4' : xsOnly}">
                                 <div :class="{'display-1': !xsOnly, 'title': xsOnly}">
-                                    {{currentContent.title}}</div>
+                                    {{currentContent.name}}</div>
                             </v-layout>
                             <v-divider class="mt-2 mb-1" style="background: #000"></v-divider>
                             <v-layout row wrap align-center>
@@ -25,7 +25,7 @@
                                         <v-divider class="mb-1"></v-divider>
                                         <v-layout row wrap align-center>
                                             <div class="body-1 font-weight-medium">Tags:</div>
-                                            <v-chip class="" :small="xsOnly" v-for="(aux, index) in currentContent.tags" :key="index">
+                                            <v-chip class="" :small="xsOnly" v-for="(aux, index) in currentContent.Tags" :key="index">
                                                 {{ aux }}
                                             </v-chip>
                                         </v-layout>
@@ -34,7 +34,7 @@
                                         <v-divider class="mb-1"></v-divider>
                                         <v-layout row wrap align-center>
                                             <div class="body-1 font-weight-medium mr-1">Description: </div>
-                                            <div class="body-1"> {{currentContent.description}} </div>
+                                            <div class="body-1"> {{currentContent.Descripcion}} </div>
                                         </v-layout>
                                     </v-flex>
                                     <v-flex xs12 class="mt-1">
@@ -48,7 +48,7 @@
                                             <v-flex xs12 class="mt-2 ml-2">
                                                 <v-layout row class="myContainer">
                                                     <!-- Componente avatar ?   -->
-                                                    <v-flex xs3 md3 lg2 xl1 v-for="(aux, index) in currentContent.characters" :key="index" 
+                                                    <v-flex xs3 md3 lg2 xl1 v-for="(aux, index) in currentContent.Personajes" :key="index" 
                                                         :class="{'ml-4' : index > 1 && xsOnly, 'ml-3' : index > 1 && !xsOnly}">
                                                         <v-layout column align-center >
                                                             <v-avatar
@@ -61,7 +61,7 @@
                                                                 :src="aux.thumbnail" alt="alt">
                                                             </v-avatar>
                                                             <div class="body-1 mx-1" style="background-color: rgba(0,0,0,0.2)">
-                                                                {{aux.name}}
+                                                                {{aux.nombrepersonaje}}
                                                             </div>
                                                         </v-layout>
                                                     </v-flex>
@@ -79,13 +79,13 @@
                 <v-card class="vCardStyle mt-3 elevation-10">
                     <!-- Si son scans -->
                     <v-layout row wrap class="pa-3" justify-center v-if="isScan">
-                        <v-flex xs5 sm4 md3 xl2 v-for="(aux, index) in currentContent.scans" :key="index">
-                            <v-layout row wrap align-center fill-height @click="goToScan (aux.idScan)">
-                                <v-img :height="heightHolderItems" class="ma-1"  :src="aux.urlThumbnail + '/thumbnail.jpg'">
+                        <v-flex xs5 sm4 md3 xl2 v-for="(aux, index) in currentContent.content" :key="index">
+                            <v-layout row wrap align-center fill-height @click="goToScan (aux.URLContenido)">
+                                <v-img :height="heightHolderItems" class="ma-1"  :src="aux.thumbnail">
                                     <v-layout row wrap fill-height align-end>
                                         <v-flex xs12>
                                             <v-layout row wrap style="background-color: rgba(0,0,0,0.5);" justify-center>
-                                                <div :class="{'headline': !smAndDown, 'body-1': smAndDown, 'white--text': 1}">{{aux.title}}</div>
+                                                <div :class="{'headline': !smAndDown, 'body-1': smAndDown, 'white--text': 1}">{{aux.TituloContenido}}</div>
                                             </v-layout>
                                         </v-flex>
                                     </v-layout>
@@ -94,13 +94,13 @@
                         </v-flex>
                     </v-layout>
                     <v-layout row wrap class="pa-3" justify-center v-if="isVideo">
-                        <v-flex xs5 sm4 md3 xl3 v-for="(aux, index) in currentContent.scans" :key="index">
-                            <v-layout row wrap align-center fill-height @click="goToScan (aux.idScan)">
+                        <v-flex xs5 sm4 md3 xl3 v-for="(aux, index) in currentContent.content" :key="index">
+                            <v-layout row wrap align-center fill-height @click="goToScan (aux.URLContenido)">
                                 <v-img :height="heightHolderItems" class="ma-1"  src="https://homuapp.000webhostapp.com/Imagenes/15-1-2019-2-20-45.jpg">
                                     <v-layout row wrap fill-height align-end>
                                         <v-flex xs12>
                                             <v-layout row wrap style="background-color: rgba(0,0,0,0.5);" justify-center>
-                                                <div :class="{'headline': !smAndDown, 'body-1': smAndDown, 'white--text': 1}">{{aux.title}}</div>
+                                                <div :class="{'headline': !smAndDown, 'body-1': smAndDown, 'white--text': 1}">{{aux.TituloContenido}}</div>
                                             </v-layout>
                                         </v-flex>
                                     </v-layout>
@@ -121,14 +121,14 @@ export default {
         return {
             xsOnly: this.$vuetify.breakpoint.xsOnly,
             smAndDown: this.$vuetify.breakpoint.smAndDown,
-            idSaga: '',
-            idHolder: '',
+            urlSaga: '',
+            urlHolder: '',
             videos: ['Anime']
         }
     },
     created () {
-        this.idHolder = this.$route.params.idHolder
-        this.idSaga = this.$route.params.idSaga
+        this.urlHolder = this.$route.params.urlHolder
+        this.urlSaga = this.$route.params.urlSaga
         // Comprobar que ya se haya cargado una saga y que esta tenga la misma id que a la que se entro
         if (Object.keys(this.saga).length === 0 && this.saga.constructor === Object) {
             console.log('No se tenia ninguna saga cargada')
@@ -184,11 +184,11 @@ export default {
         }
     },
     methods: {
-        goToScan (idScan) {
-            this.$router.push(this.idHolder + "/" + idScan + "/1")
+        goToScan (urlScan) {
+            this.$router.push(this.urlHolder + "/" + urlScan + "/1")
         },
-        goToCharacter (idChar) {
-            this.$router.push("/characters/" + idChar)
+        goToCharacter (urlChar) {
+            this.$router.push("/characters/" + urlChar)
         }
     }
 }

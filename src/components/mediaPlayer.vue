@@ -22,9 +22,9 @@ export default {
         return {
             xsOnly: this.$vuetify.breakpoint.xsOnly,
             smAndDown: this.$vuetify.breakpoint.smAndDown,
-            idSaga: '',
-            idHolder: '',
-            idScan: '',
+            urlSaga: '',
+            urlHolder: '',
+            urlContenido: '',
             nPagina: '',
             eventAdded: false,
             rutaBase: 'http://localhost/Odr/'
@@ -32,9 +32,9 @@ export default {
     },
     created () {
         //Parametros del url
-        this.idHolder = this.$route.params.idHolder
-        this.idSaga = this.$route.params.idSaga
-        this.idScan = this.$route.params.idScan
+        this.urlHolder = this.$route.params.urlHolder
+        this.urlSaga = this.$route.params.urlSaga
+        this.urlContenido = this.$route.params.urlContenido
         this.nPagina = this.$route.params.nPagina
 
         // Comprobar que ya se haya cargado una saga y que esta tenga la misma id que a la que se entro
@@ -57,12 +57,13 @@ export default {
             return this.$store.getters.getSagaData
         },
         currentContent () {
+            console.log("SAGA", this.saga)
             if (this.saga.content){
                 console.log("Current Content",this.saga.content.find((element) => {
-                    return element.idHolder === this.idHolder
+                    return element.url === this.urlHolder
                 }))
                 return this.saga.content.find((element) => {
-                    return element.idHolder === this.idHolder
+                    return element.url === this.urlHolder
                 })
             }
             else
@@ -77,21 +78,22 @@ export default {
         imageUrl () {
             if (this.saga.content) {
                 if (this.isScan) {
-                    return this.rutaBase + 'Manga/' + this.idHolder + "/" + this.currentScan.folder + "/" + this.nPagina + ".jpg"
+                    return this.rutaBase + 'Manga/' + this.urlHolder + "/" + this.urlContenido + "/" + this.nPagina + ".jpg"
                 } else if (this.isVideo) {
-                    return this.rutaBase + 'Anime/' + this.idHolder + "/" + this.currentScan.folder + "/" + this.nPagina + ".mp4"
+                    return this.rutaBase + 'Anime/' + this.currentScan.folder + "/" + this.nPagina + ".mp4"
                 }
             } else {
                 return ''
             }
         },
         currentScan () {
-            return this.currentContent.scans.find((aux) => {
-                return aux.idScan === this.idScan
+            console.log("CURRENT CONTEEEENT", this.currentContent)
+            return this.currentContent.content.find((aux) => {
+                return aux.URLContenido === this.urlContenido
             })
         },
         totalPages () {
-            return this.currentScan.nPages
+            return this.currentScan.NumeroElemento
         }
     },
     methods: {

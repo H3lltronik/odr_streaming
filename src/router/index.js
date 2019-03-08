@@ -7,6 +7,7 @@ import mediaPlayer from '@/components/mediaPlayer.vue'
 import StreamingMainPage from '@/components/streamingMain.vue'
 import PersonajeBase from '@/components/personajeBase.vue'
 import MainLogin from '@/components/login/mainLogin.vue'
+import { store } from '../store'
 // Profile
 import Configuration from '@/components/profile/configuration.vue'
 
@@ -28,17 +29,17 @@ const router = new Router({
       component: SysUploadImage
     },
     {
-      path: '/sagas/:idSaga',
+      path: '/sagas/:urlSaga',
       name: 'Selected Saga',
       component: sagaBase
     },
     {
-      path: '/sagas/:idSaga/:idHolder',
+      path: '/sagas/:urlSaga/:urlHolder',
       name: 'Holder',
       component: holderBase
     },
     {
-      path: '/sagas/:idSaga/:idHolder/:idScan/:nPagina',
+      path: '/sagas/:urlSaga/:urlHolder/:urlContenido/:nPagina',
       name: 'Media player',
       component: mediaPlayer
     },
@@ -50,7 +51,16 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: MainLogin 
+      component: MainLogin,
+      beforeEnter: (to, from, next) => {
+        if (store.getters.getUserData.id) {
+            console.log("si hay user")
+            next ('/')
+        } else {
+            console.log("no hay user")
+            next()
+        }
+      }
     },
     {
       path: '/profileConfiguration',

@@ -151,18 +151,18 @@
                                         <v-img
                                             :src="coverPic"
                                             contain
-                                            max-height="350">
+                                            :max-height="preMaxHeight">
                                         </v-img>
                                     </v-flex>
                                     <v-flex xs12 :class="{'pb-4': $vuetify.breakpoint.smAndDown}">
                                         <v-carousel :cycle="false" hide-delimiters
-                                            interval="9999999" height="130" light
+                                            interval="9999999" :height="carouselHeight" light
                                             class="mt-2" v-if="selected">
                                             <v-carousel-item v-for="i in paginas" :key="i">
                                                 <v-layout row>
                                                     <v-flex xs4 v-for="aux in itemsPerPage" :key="aux">
                                                         <v-img :src="getImageByIndex(aux, i).src"
-                                                        height="130" max-height="130" min-width="150" @click="changeCover(getImageByIndex(aux, i))">
+                                                        :height="carouselHeight" :max-height="carouselHeight" min-width="150" @click="changeCover(getImageByIndex(aux, i))">
                                                             <v-layout column fill-height>
                                                                 <v-layout row justify-center>
                                                                     <v-tooltip bottom v-if="(getImageByIndex(aux, i).src.length > 0)" >
@@ -189,7 +189,7 @@
                                                                             :mask="getMaskNumbers()"
                                                                             @change="checkTypedIndex(aux, i, $event)"
                                                                             class="centered-input"
-                                                                            style="margin-top: 50px;"
+                                                                            style="margin-top: 0px; height: 20px;"
                                                                             v-model="imagesIndexModel[getImageIndex(aux, i)].index">
                                                                         </v-text-field>
                                                                     </v-flex>
@@ -485,6 +485,24 @@ export default {
                 case 'lg': return 3
                 case 'xl': return 4
             }
+        },
+        carouselHeight () {
+          switch (this.$vuetify.breakpoint.name) {
+            case 'xs': return 100
+            case 'sm': return 100
+            case 'md': return 100
+            case 'lg': return 100
+            case 'xl': return 140
+          }
+        },
+        preMaxHeight () {
+          switch (this.$vuetify.breakpoint.name) {
+            case 'xs': return 200
+            case 'sm': return 200
+            case 'md': return 200
+            case 'lg': return 200
+            case 'xl': return 100
+          }
         },
         // Cuando se usa deep en un watch, el value viejo y el nuevo son iguales asi que es necesario
         // Usar un computed y que regrese un objeto nuevo

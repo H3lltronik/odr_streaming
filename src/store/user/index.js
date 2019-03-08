@@ -5,7 +5,7 @@ import * as firebase from 'firebase'
 
 export default({
     state: {
-        user: {}
+        user: {},
     },
     mutations: {
         setUserData (state, payload) {
@@ -47,15 +47,16 @@ export default({
     actions: {
         googleSignIn ({commit, getters}) {
             commit ('setLoading', true)
-            
+
             var provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({
                 prompt: 'select_account'
             });
             let bodyFormData = new FormData ()
+
             firebase.auth().signInWithPopup(provider).then(response => {
                 console.log("user email", response.user.email)
-                console.log("user id", response.user.uid) 
+                console.log("user id", response.user.uid)
                 //Asignar a user sus variables
                 let user = {
                     id: '',
@@ -66,24 +67,40 @@ export default({
 
                 commit('setUserData', user)
 
-                bodyFormData.set('userId', user.id)
-                bodyFormData.set('userEmail', user.email)
-
-                axios.post("http://localhost/Odr/connections/userConnections/saveUser.php", bodyFormData).then(response => {
-                    commit ('setLoading', false)
-                    router.push('/profileConfiguration')
-                }).catch(error => {
-                    console.log(error)
-                    router.push('/')
-                    commit ('setLoading', false)
-                })
             }).catch(error => {
                 console.log(error)
                 commit ('setLoading', false)
             })
         },
-        autoSignIn ({commit, dispatch}, payload) {
+        facebookSignIn ({commit, getters}) {
+            let provider = new firebase.auth.FacebookAuthProvider()
+            provider.setCustomParameters({ 
+                'display': 'popup'
+            });
+
+            firebase.auth().signInWithPopup(provider).then(response => {
+                console.log("Facebook login")
+                console.log("user email", response.user.email)
+                console.log("user id", response.user.uid)
+                //Asignar a user sus variables
+                let user = {
+                    id: '',
+                    email:''
+                }
+                user.id = response.user.uid
+                user.email = response.user.email
+
+                commit('setUserData', user)
+
+                // Aqui estaba el query a saveUser.php pero por el estado del auth firebase lo puse en donde
+                // este cambia
+            }).catch(error => {
+
+            })
+        },
+        autoSignIn ({commit, dispatch, state}, payload) {
             if (payload) {
+                let bodyFormData = new FormData ()
                 commit ('clearCurrUser')
                 //Asignar a user sus variables
                 let user = {
@@ -92,22 +109,42 @@ export default({
                 }
                 user.id = payload.uid
                 user.email = payload.email
-
                 commit('setUserData', user)
-                dispatch('fetchUserConfiguration')
+
+                bodyFormData.set('userId', user.id)
+                bodyFormData.set('userEmail', user.email)
+
+                // Como siempre al iniciar sesion manualmente o al cerrar y abrir la pestaña cambia el estado
+                // del auth firebase pues llamo aca al metodo de save
+                axios.post("http://localhost/Odr/connections/userConnections/saveUser.php", bodyFormData).then(response => {
+                    dispatch('fetchUserConfiguration')
+                    commit ('setLoading', false)
+                }).catch(error => {
+                    console.log(error)
+                    dispatch('fetchUserConfiguration')
+                    router.push('/')
+                    commit ('setLoading', false)
+                })
+                console.log("STATE",state.user)
             }
         },
         // Llena el objeto configuration de user
         fetchUserConfiguration ({getters, commit}) {
+            console.log("SI PUSE USER, MIERDA")
             let bodyFormData = new FormData ()
 
             let user = getters.getUserData
             bodyFormData.set('userId', user.id)
-            
+
             axios.post("http://localhost/Odr/connections/userConnections/getUserConfig.php", bodyFormData).then(response => {
                 let data = response.data
                 commit('setUserConfig', data)
-                console.log("DATA", data)
+                console.log("DATA USER", data)
+                if (data.response == "error" || data.ConfiguracionInicial == '0') {
+                    router.push("/profileConfiguration")
+                } else {
+                    router.push("/")
+                }
             }).catch(error => {
                 console.log(error)
             })
@@ -120,12 +157,12 @@ export default({
             let image = user.configuration.imagen
             user.configuration.id = user.id
             user.configuration.configInicial = 1
-            
+
             user.configuration.base64 = image.substr(image.indexOf(',') + 1)
 
             console.log('user', user.configuration)
             bodyFormData.set('configuration', JSON.stringify(user.configuration))
-            
+
             axios.post("http://localhost/Odr/connections/userConnections/saveConfiguration.php", bodyFormData).then(response => {
                 alert("Actualizado correctamente")
                 commit ('setLoading', false)
@@ -151,6 +188,9 @@ export default({
         getUserData (state) {
             return state.user
         },
+        getUserConfig (state) {
+            return state.user.configuration
+        }
         
     }
 })

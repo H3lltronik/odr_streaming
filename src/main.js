@@ -55,15 +55,21 @@ firebase.initializeApp({
 
 firebase.auth().onAuthStateChanged(user => {
   /* eslint-disable no-new */
+  if (user){
+    console.log("el user we")
+    store.dispatch('autoSignIn', user)
+  } else {
+    console.log("No u,u")
+    store.dispatch('autoSignIn', null)
+  }
   new Vue({
     el: '#app',
     router,
     store,
     components: { App },
     template: '<App/>',
-    created () {
-      if (user)
-        this.$store.dispatch('autoSignIn', user)
+    mounted () {
+      
     }
   })
 
