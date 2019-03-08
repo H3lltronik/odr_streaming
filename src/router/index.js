@@ -44,9 +44,9 @@ const router = new Router({
       component: mediaPlayer
     },
     {
-      path: '/characters/:idCharacter',
+      path: '/characters/:urlChar',
       name: 'Character information',
-      component: PersonajeBase 
+      component: PersonajeBase
     },
     {
       path: '/login',

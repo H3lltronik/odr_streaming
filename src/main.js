@@ -9,6 +9,7 @@ import VueAxios from 'vue-axios'
 import { store } from './store'
 import * as firebase from 'firebase'
 
+
 import 'vuetify/dist/vuetify.min.css'
 
 //Importar componentes
@@ -69,11 +70,11 @@ firebase.auth().onAuthStateChanged(user => {
     components: { App },
     template: '<App/>',
     mounted () {
-      
+
     }
   })
 
-  
+
 })
 
 

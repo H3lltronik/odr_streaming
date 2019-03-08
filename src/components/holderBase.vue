@@ -48,7 +48,7 @@
                                             <v-flex xs12 class="mt-2 ml-2">
                                                 <v-layout row class="myContainer">
                                                     <!-- Componente avatar ?   -->
-                                                    <v-flex xs3 md3 lg2 xl1 v-for="(aux, index) in currentContent.Personajes" :key="index" 
+                                                    <v-flex xs3 md3 lg2 xl1 v-for="(aux, index) in currentContent.Personajes" :key="index"
                                                         :class="{'ml-4' : index > 1 && xsOnly, 'ml-3' : index > 1 && !xsOnly}">
                                                         <v-layout column align-center >
                                                             <v-avatar
@@ -56,7 +56,7 @@
                                                                 color="white"
                                                                 style="cursor: pointer; overflow: hidden;"
                                                                 tile
-                                                                @click="goToCharacter (aux.id)">
+                                                                @click="goToCharacter (aux.urlpersonaje)">
                                                                 <img style="height: 80px; width: 60px;"
                                                                 :src="aux.thumbnail" alt="alt">
                                                             </v-avatar>

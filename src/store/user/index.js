@@ -2,10 +2,10 @@ import axios from 'axios'
 import router from '../../router'
 import * as firebase from 'firebase'
 
-
 export default({
     state: {
         user: {},
+        manualLogin: false,
     },
     mutations: {
         setUserData (state, payload) {
@@ -42,10 +42,14 @@ export default({
                     configInicial: false,
                 }
             }
+        },
+        setManualLogin (state, payload) {
+          state.manualLogin = payload
         }
     },
     actions: {
         googleSignIn ({commit, getters}) {
+            commit ('setManualLogin', true)
             commit ('setLoading', true)
 
             var provider = new firebase.auth.GoogleAuthProvider();
@@ -72,9 +76,10 @@ export default({
                 commit ('setLoading', false)
             })
         },
-        facebookSignIn ({commit, getters}) {
+        facebookSignIn ({commit, getters, state}) {
+          commit ('setManualLogin', true)
             let provider = new firebase.auth.FacebookAuthProvider()
-            provider.setCustomParameters({ 
+            provider.setCustomParameters({
                 'display': 'popup'
             });
 
@@ -142,10 +147,12 @@ export default({
                 console.log("DATA USER", data)
                 if (data.response == "error" || data.ConfiguracionInicial == '0') {
                     router.push("/profileConfiguration")
-                } else {
+                } else if (data.response != "error" && data.ConfiguracionInicial != '0' && getters.getManualLogin){
                     router.push("/")
                 }
+                commit ('setManualLogin', false)
             }).catch(error => {
+
                 console.log(error)
             })
         },
@@ -190,7 +197,10 @@ export default({
         },
         getUserConfig (state) {
             return state.user.configuration
+        },
+        getManualLogin (state){
+          return state.manualLogin
         }
-        
+
     }
 })
