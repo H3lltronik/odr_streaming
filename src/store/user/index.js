@@ -1,6 +1,7 @@
 import axios from 'axios'
 import router from '../../router'
 import * as firebase from 'firebase'
+import moment from 'moment'
 
 export default({
     state: {
@@ -116,6 +117,9 @@ export default({
                 user.email = payload.email
                 commit('setUserData', user)
 
+                let hora = moment().format('YYYY-MM-DD')
+                bodyFormData.set('hora', hora)
+
                 bodyFormData.set('userId', user.id)
                 bodyFormData.set('userEmail', user.email)
 
@@ -140,7 +144,6 @@ export default({
 
             let user = getters.getUserData
             bodyFormData.set('userId', user.id)
-
             axios.post("http://localhost/Odr/connections/userConnections/getUserConfig.php", bodyFormData).then(response => {
                 let data = response.data
                 commit('setUserConfig', data)

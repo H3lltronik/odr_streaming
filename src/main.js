@@ -8,7 +8,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { store } from './store'
 import * as firebase from 'firebase'
-
+import moment from 'moment'
 
 import 'vuetify/dist/vuetify.min.css'
 
@@ -29,6 +29,7 @@ Vue.component('select-image', SelectImage)
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
+Vue.prototype.moment = moment
 
 Vue.use(Vuetify, { theme: {
   primary: '#53435c',
