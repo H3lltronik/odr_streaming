@@ -118,7 +118,7 @@ export default {
             this.character.picture = "http://localhost/Odr/Characters/"+this.character.urlChar+"/profile.jpg"
             this.urlImgBase += this.character.IdPersonaje + "/"
 
-            let cantImages = response.data.data.cantImages
+            let cantImages = response.data.data.NumeroImagenes
             for (let i = 1; i <= cantImages; i++) {
                 this.images.push('http://localhost/Odr/Characters/' + this.character.urlChar + "/" + i + ".jpg")
             }

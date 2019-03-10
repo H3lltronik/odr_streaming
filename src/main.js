@@ -17,6 +17,8 @@ import contentTabItem from './components/contentTabItem.vue'
 import CreateHolderDialog from './components/dialogs/createHolder.vue'
 import CreateSagaDialog from './components/dialogs/createSaga.vue'
 import CreateCharacterDialog from './components/dialogs/createCharacter.vue'
+import ImagesInformation from './components/uploadContent/components/imagesInfo.vue'
+import ImagesSelector from './components/uploadContent/components/imagesSelector.vue'
 
 import SelectImage from './components/common/selectImage.vue'
 
@@ -26,6 +28,8 @@ Vue.component('create-holder-dialog', CreateHolderDialog)
 Vue.component('create-saga-dialog', CreateSagaDialog)
 Vue.component('create-character-dialog', CreateCharacterDialog)
 Vue.component('select-image', SelectImage)
+Vue.component('images-selector-carousel', ImagesSelector)
+Vue.component('images-information', ImagesInformation)
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)

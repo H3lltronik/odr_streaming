@@ -500,8 +500,8 @@ export default {
             case 'xs': return 200
             case 'sm': return 200
             case 'md': return 200
-            case 'lg': return 200
-            case 'xl': return 100
+            case 'lg': return 260
+            case 'xl': return 300
           }
         },
         // Cuando se usa deep en un watch, el value viejo y el nuevo son iguales asi que es necesario
