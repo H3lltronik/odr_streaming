@@ -17,7 +17,7 @@
 
         <v-subheader>Añadir</v-subheader>
 
-        <v-list-tile avatar @click="gotoToPage('uploadImageContent')">
+        <v-list-tile avatar @click="gotoToPage('uploadContent')">
           <v-list-tile-avatar>
             <img src="https://66.media.tumblr.com/3a3c059a676ef5ff516f84f155422429/tumblr_ol4548ZaNP1uylzwto1_250.png">
           </v-list-tile-avatar>

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import SysUploadImage from '@/components/sysUpIm.vue'
+import UploadContent from '@/components/uploadContent/uploadContent.vue'
 import holderBase from '@/components/holderBase.vue'
 import sagaBase from '@/components/sagaBase.vue'
 import mediaPlayer from '@/components/mediaPlayer.vue'
@@ -24,9 +24,9 @@ const router = new Router({
       component: StreamingMainPage
     },
     {
-      path: '/uploadImageContent',
-      name: 'Upload Image',
-      component: SysUploadImage
+      path: '/uploadContent',
+      name: 'Upload Content',
+      component: UploadContent
     },
     {
       path: '/sagas/:urlSaga',
