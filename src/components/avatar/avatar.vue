@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!--  -->
         <!-- <unity src="static/Build/Avatar.json" width="1000" height="600" unityLoader="static/Build/UnityLoader.js"></unity> -->
         <label>File
             <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
