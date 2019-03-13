@@ -25,7 +25,7 @@
                                 <v-flex xs5 sm4 md3 xl2 v-for="(aux, index) in holders" :key="index"
                                     style="cursor: pointer;">
                                     <v-layout row wrap align-center fill-height @click="goToHolder (aux)">
-                                        <v-img width="150" height="220" class="ma-1" 
+                                        <v-img width="150" height="220" class="ma-1"
                                             :src="aux.thumbnail">
                                             <v-layout row wrap fill-height align-end text-xs-center>
                                                 <v-flex xs12>
@@ -65,12 +65,12 @@
                             <div class="title font-weight-bold">Related characters</div>
                         </v-flex>
                         <v-flex xs12>
-                            
+
                         </v-flex>
                     </v-layout>
 
                     <v-layout row wrap justify-center>
-                        <v-flex xs2 md2 lg2 xl2 v-for="(aux, index) in 13" :key="index" 
+                        <v-flex xs2 md2 lg2 xl2 v-for="(aux, index) in 13" :key="index"
                             class="ma-1">
                             <v-layout column align-center text-xs-center justify-center>
                                 <v-avatar
@@ -107,32 +107,37 @@ export default {
     },
     mounted () {
         let bodyFormData = new FormData ()
-        bodyFormData.set ('charId', this.$route.params.idCharacter)
-        console.log(this.$route.params.idCharacter)
-        this.axios.post('http://localhost/Odr/connections/getCharacterData.php', bodyFormData).then(response => {
+        bodyFormData.set ('urlChar', this.$route.params.urlChar)
+        console.log("CHAR", this.$route.params.urlChar)
+        this.axios.post('http://localhost/Odr/connections/streamingContent/getCharacterData.php', bodyFormData).then(response => {
             console.log("Response:", response.data)
-            this.character.idPersonaje = response.data.data.idPersonaje
-            this.character.name = response.data.data.nomPersonaje
-            this.character.description = response.data.data.descPersonaje
-            this.character.picture = "http://localhost/Odr/Characters/"+this.character.idPersonaje+"/profile.jpg"
-            this.urlImgBase += this.character.idPersonaje + "/"
-            
-            let cantImages = response.data.data.cantImages
+            this.character.IdPersonaje = response.data.data.IdPersonaje
+            this.character.urlChar = response.data.data.URLPersonaje
+            this.character.name = response.data.data.NombrePersonaje
+            this.character.description = response.data.data.DescripcionPersonaje
+            this.character.picture = "http://localhost/Odr/Characters/"+this.character.urlChar+"/profile.jpg"
+            this.urlImgBase += this.character.IdPersonaje + "/"
+
+            let cantImages = response.data.data.NumeroImagenes
             for (let i = 1; i <= cantImages; i++) {
-                this.images.push('http://localhost/Odr/Characters/' + this.character.idPersonaje + "/" + i + ".jpg")
+                this.images.push('http://localhost/Odr/Characters/' + this.character.urlChar + "/" + i + ".jpg")
             }
 
             let holdersArray = response.data.related
             if (Array.isArray(holdersArray)){
                 let context = this;
                 holdersArray.forEach(element => {
+                  console.log("ELEMENT:", element)
                     let aux = {
-                        idPersonaje: element.idPersonaje,
-                        idSaga: element.idSaga,
-                        idScanHolder: element.idScanHolder,
-                        categoria: element.nomCategoria,
-                        titulo: element.titleHolder,
-                        thumbnail: "http://localhost/Odr/Manga/"+element.idScanHolder+"/thumbnail.jpg"
+                        idPersonaje: element.Idpersonaje,
+                        idSaga: element.IdSaga,
+                        idScanHolder: element.IdHolder,
+                        categoria: element.NombreCategoria,
+                        titulo: element.TituloHolder,
+                        urlHolder: element.URLHolder,
+                        urlSaga: element.URLSaga,
+                        // http://localhost/Odr/Manga/fanmades-bonitos-xd/thumbnail.jpg]
+                        thumbnail: "http://localhost/Odr/Manga/"+element.URLHolder+"/thumbnail.jpg"
                         }
                     context.holders.push(aux)
                 });
@@ -142,7 +147,8 @@ export default {
     },
     methods: {
         goToHolder (holder) {
-            this.$router.push("/sagas/" + holder.idSaga + "/" + holder.idScanHolder)
+          console.log("HOLDER", holder)
+            this.$router.push("/sagas/" + holder.urlSaga + "/" + holder.urlHolder)
         }
     },
     computed: {
@@ -158,9 +164,9 @@ export default {
     }
 
     .charDescription {
-        height: 250px; 
+        height: 250px;
         max-height: 251px;
         overflow-y: auto;
     }
-    
+
 </style>

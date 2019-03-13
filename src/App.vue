@@ -17,7 +17,7 @@
 
         <v-subheader>Añadir</v-subheader>
 
-        <v-list-tile avatar @click="gotoToPage('uploadImageContent')">
+        <v-list-tile avatar @click="gotoToPage('uploadContent')">
           <v-list-tile-avatar>
             <img src="https://66.media.tumblr.com/3a3c059a676ef5ff516f84f155422429/tumblr_ol4548ZaNP1uylzwto1_250.png">
           </v-list-tile-avatar>
@@ -39,7 +39,27 @@
         </v-avatar>
         <v-toolbar-title class='text-sm-right white--text font-weight-thin headline'>HomuApp!</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon ><v-icon class='white--text'>add_box</v-icon></v-btn>
+      <v-toolbar-items>
+
+        <v-btn flat class="white--text" @click="gotoToPage('profileConfiguration')" v-if="isUserLogged"> 
+          <v-layout row wrap fill-height justify-center align-center class="mr-2">
+            <v-avatar
+              size="40"
+              color="red">
+              <img :src="userData.imagen" alt="alt">
+            </v-avatar>
+          </v-layout>
+          {{userData.nickname}}
+        </v-btn>
+        
+        <v-btn flat class="white--text" @click="logout" v-if="isUserLogged"> 
+          Logout <v-icon>exit_to_app</v-icon>
+        </v-btn>
+
+        <v-btn flat class="white--text" @click="gotoToPage('login')" v-if="!isUserLogged">
+          Sign in <v-icon>input</v-icon>
+        </v-btn>
+      </v-toolbar-items>
     </v-toolbar>
 
     <v-content>
@@ -62,6 +82,27 @@ export default {
     },
     gotoToPage (page) {
       this.$router.replace('/' + page)
+    },
+    logout () {
+      this.$store.dispatch('logout')
+    }
+  },
+  computed: {
+    isUserLogged () {
+      let id = this.$store.getters.getUserData.id
+      if (id !== '' && id !== undefined) {
+        return true
+      } else {
+        return false
+      }
+    },
+    userData () {
+      let data = this.$store.getters.getUserConfig
+      console.log("weewewewe", data)
+      if (data)
+        return data
+      else 
+        return ""
     }
   }
 }

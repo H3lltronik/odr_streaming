@@ -25,7 +25,7 @@ export default({
     },
     actions: {
         loadSagasInfo ({commit}) {
-            axios.post("http://localhost/Odr/connections/getSaga.php").then(response => {
+            axios.post("http://localhost/Odr/connections/streamingContent/getSaga.php").then(response => {
                 commit('setSagas', response.data)
             })
         },
@@ -45,74 +45,57 @@ export default({
             }
             bodyFormData.set('idSaga', idSaga)
             console.log(idSaga)
-            axios.post('http://localhost/Odr/connections/getSagaData.php', bodyFormData).then(response => {
+            axios.post('http://localhost/Odr/connections/streamingContent/getSagaContent.php', bodyFormData).then(response => {
                 let data = response.data
-                console.log("Data", data)
-                saga.name = data.infoSaga.tituloSaga
-                saga.photoInfo = {thumbnail: data.infoSaga.thumbnailSaga, background: data.infoSaga.backgroundSaga}
+                console.log("Data ACA XD", data)
+                saga.name = data.TituloSaga
+                saga.photoInfo = {thumbnail: data.ThumbnailSaga, background: data.BackgroundSaga}
 
-                if (Array.isArray(data.infoSaga.categoriasSaga)) {
-                    data.infoSaga.categoriasSaga.forEach(element => {
-                        saga.categorys.push(element)
-                    });
-                }
+                //Obtener categorias
+                let categs = []
+                data.categorias.forEach(elementCategs => {
+                    categs.push(elementCategs.NombreCategoria)
+                });
+                saga.categorys = categs
+                console.log("categs", categs)
 
                 if (Array.isArray(data.holders)) {
-                    console.log("WARD", data.holders)
                     data.holders.forEach(element => {
                         let rutaBase = 'http://localhost/Odr/';
                         let rutaThumbnail = '';
-                        rutaThumbnail = rutaBase + element.nomCategoria + '/' + element.idScanHolder + '/thumbnail.jpg'
+                        rutaThumbnail = rutaBase + element.NombreCategoria + '/' + element.URLHolder + '/thumbnail.jpg'
                         //obtener tags
                         let tagsT = []
                         element.tags.forEach(elementTag => {
-                            tagsT.push(elementTag.nombretag)
+                            tagsT.push(elementTag.NombreTag)
                         });
                         //Obtener scans
-                        let scans = []
-                        let contScans = 0
-                        element.scans.forEach(elementScan => {
-                            let urlThumbnail = rutaBase + elementScan.nomCategoria + "/" + elementScan.idScanHolder + "/" + elementScan.rutaScans
-                            scans.push({
-                                idHolder: elementScan.idScanHolder,
-                                idScan: elementScan.idScans,
-                                title: elementScan.tituloScans,
-                                folder: elementScan.rutaScans,
-                                urlThumbnail: urlThumbnail,
-                                tags: [],
-                                nPages: elementScan.nPaginas,
-                                type: elementScan.nomCategoria
-                            })
-                            if (elementScan.tags !== undefined && elementScan.tags !== null) {
-                              console.log("Element scan", elementScan.tags)
-                              if (Array.isArray(elementScan.tags)) {
-                                elementScan.tags.forEach(elementTagScan => {
-                                  scans[contScans].tags.push(elementTagScan)
-                                })
-                              }
-                            }
-                            contScans++;
+                        let contenidos = []
+                        let contContenidos = 0
+                        element.contenidos.forEach(elementContenidos => {
+                            elementContenidos.thumbnail = rutaBase + element.NombreCategoria + "/" + 
+                                element.URLHolder + "/" + elementContenidos.URLContenido + "/thumbnail.jpg"
+                            contenidos.push(elementContenidos)
                         });
 
                         // Obtener personajes
-                        let characters = []
-                        element.characters.forEach(elementChar => {
-                            characters.push({
-                                id: elementChar.idPersonaje,
-                                name: elementChar.nomPersonaje,
-                                thumbnail: "http://localhost/Odr/Characters/" + elementChar.idPersonaje + "/profile.jpg"
-                            })
+                        let personajes = []
+                        element.personajes.forEach(elementPersonajes => {
+                            elementPersonajes.thumbnail = rutaBase + "/Characters/" + elementPersonajes.urlpersonaje + "/profile.jpg"
+                            personajes.push(elementPersonajes)
                         });
+
                         // Incluir todo los elementos sacados anteriormente
                         saga.content.push({
-                            idHolder: element.idScanHolder,
-                            type: element.nomCategoria,
-                            title: element.titleHolder,
-                            description: element.descriptionHolder,
-                            scans: scans,
-                            characters: characters,
-                            tags: tagsT,
-                            thumbnail: rutaThumbnail
+                            IdHolder: element.IdHolder,
+                            name: element.TituloHolder,
+                            Descripcion: element.DescripcionHolder,
+                            content: contenidos,
+                            thumbnail: rutaThumbnail,
+                            type: element.NombreCategoria,
+                            url: element.URLHolder,
+                            Tags: tagsT,
+                            Personajes: personajes
                         })
                     });
                 }

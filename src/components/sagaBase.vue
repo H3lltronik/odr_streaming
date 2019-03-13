@@ -70,15 +70,15 @@ export default {
         }
     },
     mounted () {
-        this.idSaga = this.$route.params.idSaga
+        this.urlSaga = this.$route.params.urlSaga
         let saga = this.$store.getters.getSagaData
         // Comprobar que ya se haya cargado una saga y que esta tenga la misma id que a la que se entro
         if (Object.keys(saga).length === 0 && saga.constructor === Object) {
             // console.log('No se tenia ninguna saga cargada')
-            this.$store.dispatch('loadSagaData', this.idSaga)
+            this.$store.dispatch('loadSagaData', this.urlSaga)
         } else {
-            if (this.$store.getters.getSagaData.idSaga !== this.idSaga) {
-                this.$store.dispatch('loadSagaData', this.idSaga)
+            if (this.$store.getters.getSagaData.urlSaga !== this.urlSaga) {
+                this.$store.dispatch('loadSagaData', this.urlSaga)
                 // console.log('Se tenia cargada otra saga')
             } // else
                 // console.log('La misma saga cargada')
@@ -88,7 +88,7 @@ export default {
     },
     computed: {
         categorys () {
-            console.log("CONTENT: ", this.$store.getters.getSagaData.categorys)
+            //console.log("CONTENT: ", this.$store.getters.getSagaData.categorys)
             return this.$store.getters.getSagaData.categorys
         },
         photoInfo () {

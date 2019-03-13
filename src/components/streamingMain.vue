@@ -5,16 +5,16 @@
         <v-layout column>
           <v-flex xs12>
             <div class="title black--text font-weight-light my-2">Sagas</div>
-            <v-layout row text-xs-center :justify-center="sagasJustifyCenter" 
+            <v-layout row text-xs-center :justify-center="0"
               class="verticalSlider" v-if="sagasLength >= 0">
               <v-img :height="sagaItemHeight" :width="sagaItemWidth" max-width="300"
               v-for="aux in sagaItems" :key="aux" class="mr-3 boxContent"
-              @click="goToSaga (sagas[aux-1].idSaga)"
-              :src="sagas[aux-1].thumbnailSaga">
+              @click="goToSaga (sagas[aux-1].URLSaga)"
+              :src="sagas[aux-1].ThumbnailSaga">
                 <v-layout row wrap fill-height align-end>
                   <div style="background-color: rgba(0, 0, 0, 0.5); width: 100%;">
                     <div class="title white--text font-weight-bold ml-2">
-                      {{sagas[aux-1].tituloSaga}}
+                      {{sagas[aux-1].TituloSaga}}
                     </div>
                   </div>
                 </v-layout>
@@ -51,9 +51,9 @@ export default {
     }
   },
   methods: {
-    goToSaga (idSaga) {
-      if (idSaga !== '')
-        this.$router.push("sagas/" + idSaga)
+    goToSaga (URLSaga) {
+      if (URLSaga !== '')
+        this.$router.push("sagas/" + URLSaga)
     },
     //Para obtener las medidas de la ventana
     onResize () {
@@ -87,7 +87,11 @@ export default {
     },
     // Si el tamaño de la ventana es menor al del total del tamaño de todas las sagas
     sagasJustifyCenter () {
-      if (this.windowSize.x < (this.sagaItems * this.sagaItemWidth)) {
+      // el tamaño del horizontal slide es de flex10 asi que al tamaño del windows.x se le resta
+      // flex2
+      let flex1 = (this.windowSize.x / 12)
+      let sagaSlide = (this.windowSize.x - (flex1*2))
+      if (sagaSlide < (this.sagaItems * this.sagaItemWidth)) {
         return false
       } else {
         return true
