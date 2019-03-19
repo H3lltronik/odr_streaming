@@ -21,6 +21,7 @@ import ImagesInformation from './components/uploadContent/components/imagesInfo.
 import ImagesSelector from './components/uploadContent/components/imagesSelector.vue'
 
 import SelectImage from './components/common/selectImage.vue'
+import './registerServiceWorker'
 
 //Implementar componentes
 Vue.component('content-tab-item', contentTabItem)

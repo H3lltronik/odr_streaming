@@ -1,15 +1,15 @@
 {
   "name": "odr",
   "version": "1.0.0",
+  "private": true,
   "description": "A Vue.js project",
   "author": "H3lltronik <esau.egs1@gmail.com>",
-  "private": true,
   "scripts": {
+    "build": "node build/build.js",
+    "test": "npm run unit",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --coverage",
-    "test": "npm run unit",
-    "build": "node build/build.js"
+    "unit": "jest --config test/unit/jest.conf.js --coverage"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -17,6 +17,7 @@
     "firebase": "^5.8.5",
     "moment": "^2.24.0",
     "mysql": "^2.16.0",
+    "register-service-worker": "^1.6.2",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.4",
     "vue-moment": "^4.0.0",
@@ -25,6 +26,7 @@
     "vuex": "^3.1.0"
   },
   "devDependencies": {
+    "@vue/cli-plugin-pwa": "^3.5.1",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
@@ -67,13 +69,13 @@
     "webpack-dev-server": "^2.9.1",
     "webpack-merge": "^4.1.0"
   },
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  }
 }
