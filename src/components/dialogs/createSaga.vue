@@ -169,7 +169,7 @@ export default {
         bodyFormData.set('coverPic', this.removeBase64Headers(this.newSaga.coverPic))
         bodyFormData.set('bgPic', this.removeBase64Headers(this.newSaga.bgPic))
 
-        this.axios.post('http://localhost/Odr/connections/createSaga.php', bodyFormData).then(response => {
+        this.axios.post('http://localhost/Odr/connections/streamingContent/creating/createSaga.php', bodyFormData).then(response => {
             console.log(response)
         })
     },

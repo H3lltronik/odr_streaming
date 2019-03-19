@@ -5,7 +5,8 @@ export default({
     state: {
         sagas: [],
         saga: {},
-        categorys: []
+        categorys: [],
+        tags: [],
     },
     mutations: {
         setSagaData (state, payload) {
@@ -21,30 +22,38 @@ export default({
             payload.forEach(element => {
                 state.categorys.push(element)
             });
+        },
+        setTags (state, payload) {
+            state.tags = payload
+        },
+        clearSagas (state) {
+            state.sagas = []
         }
     },
     actions: {
         loadSagasInfo ({commit}) {
+            commit('clearSagas')
             axios.post("http://localhost/Odr/connections/streamingContent/getSaga.php").then(response => {
                 commit('setSagas', response.data)
             })
         },
         loadCategorys ({commit}) {
-            axios.post("http://localhost/Odr/connections/getCategorys.php").then(response => {
+            axios.post("http://localhost/Odr/connections/streamingContent/getCategorys.php").then(response => {
                 commit('setCategorys', response.data)
             })
         },
-        loadSagaData ({commit, getters}, idSaga) {
+        loadSagaData ({commit, getters}, urlSaga) {
+            commit('clearSagas')
             let bodyFormData = new FormData()
             let saga = {
-                idSaga: idSaga,
+                urlSaga: urlSaga,
                 name: '',
                 photoInfo: {},
                 categorys: [],
                 content: []
             }
-            bodyFormData.set('idSaga', idSaga)
-            console.log(idSaga)
+            bodyFormData.set('urlSaga', urlSaga)
+            console.log('idSaga', urlSaga)
             axios.post('http://localhost/Odr/connections/streamingContent/getSagaContent.php', bodyFormData).then(response => {
                 let data = response.data
                 console.log("Data ACA XD", data)
@@ -53,9 +62,11 @@ export default({
 
                 //Obtener categorias
                 let categs = []
-                data.categorias.forEach(elementCategs => {
-                    categs.push(elementCategs.NombreCategoria)
-                });
+                if (Array.isArray(data.categorias)) {
+                    data.categorias.forEach(elementCategs => {
+                        categs.push(elementCategs.NombreCategoria)
+                    });
+                }
                 saga.categorys = categs
                 console.log("categs", categs)
 
@@ -66,24 +77,31 @@ export default({
                         rutaThumbnail = rutaBase + element.NombreCategoria + '/' + element.URLHolder + '/thumbnail.jpg'
                         //obtener tags
                         let tagsT = []
-                        element.tags.forEach(elementTag => {
-                            tagsT.push(elementTag.NombreTag)
-                        });
+                        if (Array.isArray(element.tags)) {
+                            element.tags.forEach(elementTag => {
+                                tagsT.push(elementTag.NombreTag)
+                            });
+                        }
                         //Obtener scans
                         let contenidos = []
                         let contContenidos = 0
-                        element.contenidos.forEach(elementContenidos => {
-                            elementContenidos.thumbnail = rutaBase + element.NombreCategoria + "/" + 
-                                element.URLHolder + "/" + elementContenidos.URLContenido + "/thumbnail.jpg"
-                            contenidos.push(elementContenidos)
-                        });
+                        
+                        if (Array.isArray(element.contenidos)) {
+                            element.contenidos.forEach(elementContenidos => {
+                                elementContenidos.thumbnail = rutaBase + element.NombreCategoria + "/" + 
+                                    element.URLHolder + "/" + elementContenidos.URLContenido + "/thumbnail.jpg"
+                                contenidos.push(elementContenidos)
+                            });
+                        }
 
                         // Obtener personajes
                         let personajes = []
-                        element.personajes.forEach(elementPersonajes => {
-                            elementPersonajes.thumbnail = rutaBase + "/Characters/" + elementPersonajes.urlpersonaje + "/profile.jpg"
-                            personajes.push(elementPersonajes)
-                        });
+                        if (Array.isArray(element.personajes)) {
+                            element.personajes.forEach(elementPersonajes => {
+                                elementPersonajes.thumbnail = rutaBase + "/Characters/" + elementPersonajes.urlpersonaje + "/profile.jpg"
+                                personajes.push(elementPersonajes)
+                            });
+                        }
 
                         // Incluir todo los elementos sacados anteriormente
                         saga.content.push({
@@ -103,6 +121,17 @@ export default({
                 console.log("Contenido:", saga)
                 commit('setSagaData', saga)
             })
+        },loadTags ({commit}) {
+            axios.post('http://localhost/Odr/connections/streamingContent/creating/getAllTags.php').then(response => {
+                let data = response.data
+                let tags = []
+                data.forEach(element => {
+                    tags.push(element)
+                });
+                commit('setTags', tags)
+            }).catch(error => {
+                console.log(error)
+            })
         }
     },
     getters: {
@@ -114,6 +143,9 @@ export default({
         },
         getCategorys (state) {
             return state.categorys
+        },
+        getTags (state) {
+            return state.tags
         },
     }
 })

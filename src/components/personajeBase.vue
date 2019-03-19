@@ -136,8 +136,8 @@ export default {
                         titulo: element.TituloHolder,
                         urlHolder: element.URLHolder,
                         urlSaga: element.URLSaga,
-                        // http://localhost/Odr/Manga/fanmades-bonitos-xd/thumbnail.jpg]
-                        thumbnail: "http://localhost/Odr/Manga/"+element.URLHolder+"/thumbnail.jpg"
+                        thumbnail: "http://localhost/Odr/" + element.NombreCategoria + "/" + 
+                            element.URLHolder+"/thumbnail.jpg"
                         }
                     context.holders.push(aux)
                 });

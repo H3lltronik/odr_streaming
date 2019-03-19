@@ -8,20 +8,22 @@
     <v-text-field
         name="bookTitle"
         label="Titulo del articulo"
-        v-model="information.titulo"
+        v-model="modelGeneros"
         id="bookTitle"
         box
+        @change="changeTitulo"
         required>
         </v-text-field>
     <v-layout row wrap>
-        <v-flex xs12>
+        <v-flex xs12 md6>
             <v-select
-                :items="generos"
-                v-model="information.generos"
+                :items="generosCargados"
+                v-model="modelTitulo"
                 label="Genero"
                 box
                 multiple
                 chips
+                @change="changeGenero"
                 persistent-hint>
             </v-select>
         </v-flex>
@@ -33,11 +35,17 @@
 export default {
     data () {
         return {
-            information: {
-                titulo: '',
-                generos: [],
-            },
-            generos: ['Nose'],
+            modelTitulo: '',
+            modelGeneros: '',
+            generosCargados: ['Nose'],
+        }
+    },
+    methods: {
+        changeGenero ($event) {
+            this.$emit('changeGenero', $event)
+        },
+        changeTitulo ($event) {
+            this.$emit('changeTitulo', $event)
         }
     }
 }

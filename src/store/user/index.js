@@ -203,7 +203,9 @@ export default({
         },
         getManualLogin (state){
           return state.manualLogin
+        },
+        getUserData (state) {
+            return state.user
         }
-
     }
 })

@@ -1,5 +1,5 @@
 <template>
-    <v-layout row wrap fill-height style="background-color: #1a1325">
+    <v-layout row wrap fill-height style="background-color: #1a1325" justify-center>
         <v-flex xs12>
             <v-layout row wrap justify-center class="my-5" v-touch="{left: () => swipe('left'),right: () => swipe('right')}" v-if="isScan">
                 <v-flex xs10>
@@ -8,9 +8,12 @@
             </v-layout>
             <v-layout row wrap justify-center class="my-5" v-if="isVideo">
                 <v-flex xs10>
-                    <video controls style="width: 100%" :src="imageUrl"></video>
+                    <video controls style="width: 100%; max-height: 700px;" :src="imageUrl"></video>
                 </v-flex>
             </v-layout>
+        </v-flex>
+        <v-flex xs12 md10>
+            <comments></comments>
         </v-flex>
     </v-layout>
 </template>
@@ -40,10 +43,10 @@ export default {
         // Comprobar que ya se haya cargado una saga y que esta tenga la misma id que a la que se entro
         if (Object.keys(this.saga).length === 0 && this.saga.constructor === Object) {
             console.log('No se tenia ninguna saga cargada')
-            this.$store.dispatch('loadSagaData', this.idSaga)
+            this.$store.dispatch('loadSagaData', this.urlSaga)
         } else {
-            if (this.$store.getters.getSagaData.idSaga !== this.idSaga) {
-                this.$store.dispatch('loadSagaData', this.idSaga)
+            if (this.$store.getters.getSagaData.urlSaga !== this.urlSaga) {
+                this.$store.dispatch('loadSagaData', this.urlSaga)
                 console.log('Se tenia cargada otra saga')
             } else
                 console.log('La misma saga cargada')
@@ -54,10 +57,11 @@ export default {
     },
     computed: {
         saga () {
+            
             return this.$store.getters.getSagaData
         },
         currentContent () {
-            console.log("SAGA", this.saga)
+            console.log("QUE PEDO", this.saga.content)
             if (this.saga.content){
                 console.log("Current Content",this.saga.content.find((element) => {
                     return element.url === this.urlHolder
@@ -73,6 +77,7 @@ export default {
             return (this.currentContent.type === 'Manga')
         },
         isVideo () {
+            console.log("IS VIDEOOO")
             return (this.currentContent.type === 'Anime')
         },
         imageUrl () {
@@ -80,7 +85,7 @@ export default {
                 if (this.isScan) {
                     return this.rutaBase + 'Manga/' + this.urlHolder + "/" + this.urlContenido + "/" + this.nPagina + ".jpg"
                 } else if (this.isVideo) {
-                    return this.rutaBase + 'Anime/' + this.currentScan.folder + "/" + this.nPagina + ".mp4"
+                    return this.rutaBase + 'Anime/' + this.urlHolder + "/" + this.urlContenido + "/" + this.nPagina + ".mp4"
                 }
             } else {
                 return ''

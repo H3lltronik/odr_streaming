@@ -7,6 +7,7 @@ import mediaPlayer from '@/components/mediaPlayer.vue'
 import StreamingMainPage from '@/components/streamingMain.vue'
 import PersonajeBase from '@/components/personajeBase.vue'
 import MainLogin from '@/components/login/mainLogin.vue'
+import Avatar from '@/components/avatar/avatar.vue'
 import { store } from '../store'
 // Profile
 import Configuration from '@/components/profile/configuration.vue'
@@ -66,6 +67,12 @@ const router = new Router({
       path: '/profileConfiguration',
       name: 'Configuration',
       component: Configuration,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/avatar',
+      name: 'Avatar',
+      component: Avatar,
       beforeEnter: AuthGuard
     }
   ],

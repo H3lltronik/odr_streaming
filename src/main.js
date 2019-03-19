@@ -9,6 +9,7 @@ import VueAxios from 'vue-axios'
 import { store } from './store'
 import * as firebase from 'firebase'
 import moment from 'moment'
+import Unity from 'vue-unity-webgl'
 
 import 'vuetify/dist/vuetify.min.css'
 
@@ -19,8 +20,11 @@ import CreateSagaDialog from './components/dialogs/createSaga.vue'
 import CreateCharacterDialog from './components/dialogs/createCharacter.vue'
 import ImagesInformation from './components/uploadContent/components/imagesInfo.vue'
 import ImagesSelector from './components/uploadContent/components/imagesSelector.vue'
-
 import SelectImage from './components/common/selectImage.vue'
+import VideoUploader from './components/uploadContent/components/videoUploader.vue'
+import Comments from './components/common/comments.vue'
+import Buscador from './components/common/buscador.vue'
+import RowContent from './components/streaming main page/rowContent.vue'
 
 //Implementar componentes
 Vue.component('content-tab-item', contentTabItem)
@@ -30,6 +34,11 @@ Vue.component('create-character-dialog', CreateCharacterDialog)
 Vue.component('select-image', SelectImage)
 Vue.component('images-selector-carousel', ImagesSelector)
 Vue.component('images-information', ImagesInformation)
+Vue.component('video-uploader', VideoUploader)
+Vue.component('comments', Comments)
+Vue.component('buscador', Buscador)
+Vue.component('row-content', RowContent)
+Vue.component('unity', Unity)
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)

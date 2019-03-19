@@ -38,7 +38,7 @@
                     <v-flex xs12 lg6 class="pr-1">
                         <v-select
                           :items="loadedSagas"
-                          item-text="tituloSaga"
+                          item-text="TituloSaga"
                           v-model="newHolder.saga"
                           return-object
                           label="Saga">
@@ -47,7 +47,7 @@
                     <v-flex xs12 lg6 class="pl-1">
                         <v-select
                             :items="loadedCategorys"
-                            item-text="nomCategoria"
+                            item-text="NombreCategoria"
                             v-model="newHolder.category"
                             return-object
                             label="Category">
@@ -71,6 +71,20 @@
                         <v-textarea box name="name" id="id" label="Descripcion del Holder" v-model="newHolder.description">
                         </v-textarea>
                     </v-flex>
+                    <!-- Select de tags  -->
+                    <!--------------  -------------->
+                    <v-flex xs12 class="pb-3">
+                        <v-select
+                            :items="tags"
+                            item-text="NombreTag"
+                            v-model="newHolder.tags"
+                            return-object
+                            label="Tags"
+                            multiple
+                            chips>
+                        </v-select>
+                    </v-flex>
+
                     <v-flex xs12>
                       <v-layout row wrap fill-height align-center style="margin-top: -20px;">
                         <v-flex xs4 md3>
@@ -192,14 +206,14 @@
                                           <v-flex xs12 class="mt-1">
                                               <v-layout row wrap align-center>
                                                   <div class="body-1 font-weight-medium" >Type: </div>
-                                                  <v-chip class="ml-1" :small="xsOnly">{{ newHolder.category.nomCategoria }}</v-chip>
+                                                  <v-chip class="ml-1" :small="xsOnly">{{ newHolder.category.NombreCategoria }}</v-chip>
                                               </v-layout>
                                           </v-flex>
                                           <v-flex xs12 class="mt-1">
                                               <v-layout row wrap align-center>
                                                   <div class="body-1 font-weight-medium">Tags:</div>
-                                                  <v-chip class="" :small="xsOnly" v-for="(aux, index) in 4" :key="index">
-                                                      XD
+                                                  <v-chip class="" :small="xsOnly" v-for="(aux, index) in newHolder.tags" :key="index">
+                                                      {{aux.NombreTag}}
                                                   </v-chip>
                                               </v-layout>
                                           </v-flex>
@@ -219,7 +233,7 @@
                     <v-flex xs12>
                         <v-divider class="my-2"></v-divider>
                     </v-flex>
-                    <v-btn color="success" block @click="saveHolder">CREATE HOLDER</v-btn>
+                    <v-btn color="success" block @click="saveHolder" :loading="loading">CREATE HOLDER</v-btn>
                 </v-layout>
             </v-card-text>
         </v-card>
@@ -238,15 +252,20 @@
           description: 'Descripcion vacia',
           category: {},
           saga: {},
+          tags: [],
           coverPic: 'https://homuapp.000webhostapp.com/Imagenes/24-11-2018-14-54-14.jpg'
         },
         characters: [],
         selectedChar: {},
-        allSelectedChar: []
+        allSelectedChar: [],
+        loading: false,
       }
     },
-    mounted () {
+    created () {
       this.loadCharacters ()
+      this.$store.dispatch('loadSagasInfo')
+      this.$store.dispatch('loadCategorys')
+      this.$store.dispatch('loadTags')
     },
     methods: {
       onCoverSelect () {
@@ -271,36 +290,47 @@
         this.newHolder.coverPic = src
       },
       saveHolder () {
-
+        this.loading = true
         let allSelectedCharIds = []
         this.allSelectedChar.forEach(element => {
           allSelectedCharIds.push(element.idCharacter)
         });
 
           let bodyFormData = new FormData()
-          bodyFormData.set('idSaga', this.newHolder.saga.idSaga)
+          bodyFormData.set('idSaga', this.newHolder.saga.IdSaga)
           bodyFormData.set('titleHolder', this.newHolder.title)
           bodyFormData.set('descriptionHolder', this.newHolder.description)
-          bodyFormData.set('category', this.newHolder.category.idCategoria)
-          bodyFormData.set('nomCategory', this.newHolder.category.nomCategoria)
+          bodyFormData.set('category', this.newHolder.category.IdCategoria)
+          bodyFormData.set('nomCategory', this.newHolder.category.NombreCategoria)
           bodyFormData.set('thumbnail', this.removeBase64Headers(this.newHolder.coverPic))
           bodyFormData.set('idChar', JSON.stringify(allSelectedCharIds))
+          bodyFormData.set('tags', JSON.stringify(this.newHolder.tags))
 
-          this.axios.post('http://localhost/Odr/connections/createHolder.php', bodyFormData).then(response => {
+          console.log("newHolder", this.newHolder)
+          this.axios.post('http://localhost/Odr/connections/streamingContent/creating/createHolder.php', bodyFormData).then(response => {
               console.log(response)
+              this.loading = false
+              if (response.data.status == "OK")
+                alert('Se ha insertado el holder correctamente')
+              else {
+                alert('Ha ocurrido un error insertando el holder')
+              }
+          }).catch(error => {
+            this.loading = false
+            console.log(error)
           })
       },
       removeBase64Headers (base64) {
           return base64.substr(base64.indexOf(',') + 1)
       },
       loadCharacters () {
-        this.axios.post('http://localhost/Odr/connections/getAllCharacters.php').then(response => {
+        this.axios.post('http://localhost/Odr/connections/streamingContent/creating/getAllCharacters.php').then(response => {
               console.log(response)
               response.data.forEach(element => {
                 this.characters.push({
-                  thumbnail: 'http://localhost/Odr/Characters/' + element.idPersonaje + "/profile.jpg",
-                  idCharacter: element.idPersonaje,
-                  name: element.nomPersonaje
+                  thumbnail: 'http://localhost/Odr/Characters/' + element.URLPersonaje + "/profile.jpg",
+                  idCharacter: element.IdPersonaje,
+                  name: element.NombrePersonaje
                 })
               });
               console.log("Characters", this.characters)
@@ -324,10 +354,11 @@
     computed: {
       loadedSagas () {
         let aux = this.$store.getters.getSagas
+        console.log("SAGAS?", aux)
         if (aux.length > 0) {
             let result = []
             aux.forEach(element => {
-                result.push({idSaga: element.idSaga, tituloSaga: element.tituloSaga})
+                result.push({IdSaga: element.IdSaga, TituloSaga: element.TituloSaga})
             });
             return result
         }
@@ -337,6 +368,7 @@
       },
       loadedCategorys () {
           let aux = this.$store.getters.getCategorys
+          console.log("CATEGORYS?", aux)
         if (aux.length > 0) {
             let result = []
             aux.forEach(element => {
@@ -346,6 +378,14 @@
         }
         else{
             return aux
+        }
+      },
+      tags () {
+        let aux = this.$store.getters.getTags
+        if (aux.length > 0) {
+          return aux
+        } else {
+          return []
         }
       }
     }

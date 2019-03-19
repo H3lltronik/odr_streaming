@@ -126,7 +126,9 @@
                                 <div class="headline">Informacion del contenido</div>
                             </v-card-title>
                             <v-card-text>
-                                <images-information></images-information>
+                                <images-information v-on:changeTitulo="changeTitulo($event)" 
+                                    v-on:changeGenero="changeGenero($event)">
+                                </images-information>
                             </v-card-text>
                             <v-card-actions>
                                 <v-btn color="info" @click="stepper = 2">Atras</v-btn>
@@ -141,11 +143,14 @@
                                 <div class="headline">Elegir archivos</div>
                             </v-card-title>
                             <v-card-text>
-                                <images-selector-carousel :preview="true"></images-selector-carousel>
+                                <images-selector-carousel :preview="true" v-on:passImages="getImages($event)" v-if="contentType == 1">
+                                </images-selector-carousel>
+                                <video-uploader v-on:refFile="getVideo($event)" v-if="contentType == 2">
+                                </video-uploader>
                             </v-card-text>
                             <v-card-actions>
                                 <v-btn color="info" @click="stepper = 3">Atras</v-btn>
-                                <v-btn color="success">Subir</v-btn>
+                                <v-btn color="success" :disabled="!uploadBtnEnabled" @click="uploadContent">{{btnText}}</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-stepper-content>
@@ -159,16 +164,114 @@ export default {
     data () {
         return {
             contentType: '1',
-            stepper: 4,
+            stepper: 1,
             sagasInfo: [],
             categoriasInfo: [],
             newContent: {
+                titulo: '',
+                genero: [],
                 saga: {},
                 categoria: {},
-            }
+                images: [],
+                imagesNoHeader: [],
+                video: ''
+            },
+            uploadBtnEnabled: true,
+            btnText: 'Subir contenido'
         }
     },
     methods: {
+        getImages ($event) {
+            this.newContent.images = $event
+        },
+        getVideo ($event) {
+            this.newContent.video = $event
+            console.log("Event", $event)
+        },
+        uploadContent () {
+            this.btnText = "Subiendo"
+            this.uploadBtnEnabled = false
+            //console.log(this.newContent)
+            switch (this.contentType) {
+                // Caso de imagenes
+                case '1': {
+                    this.uploadImages()
+                    break;
+                }
+                // Caso de video
+                case '2': {
+                    this.uploadVideo()
+                    break;
+                }
+            }
+            
+        },
+        changeGenero ($event) {
+            this.newContent.genero = $event
+        },
+        changeTitulo ($event) {
+            this.newContent.titulo = $event
+        },
+        removeBase64Headers (base64) {
+            return base64.substr(base64.indexOf(',') + 1)
+        },
+        uploadImages () {
+            var bodyFormData = new FormData();
+            //Reset array
+            this.newContent.imagesNoHeader = []
+            //Quitar header del base64
+            this.newContent.images.forEach(element => {
+                this.newContent.imagesNoHeader.push(this.removeBase64Headers(element.src))
+            });
+            let thumbnail = this.newContent.images.find((element) => {
+                return (element.thumbnail === true)
+            })
+
+            bodyFormData.set('Scans', JSON.stringify(this.newContent.imagesNoHeader))
+            bodyFormData.set('idSaga', this.newContent.saga.idSaga)
+            bodyFormData.set('tituloScans', this.newContent.titulo)
+            bodyFormData.set('category', JSON.stringify(this.newContent.categoria))
+            bodyFormData.set('nPaginas', this.newContent.images.length)
+            bodyFormData.set('idScanHolder', this.newContent.holder.idHolder)
+            bodyFormData.set('URLHolder', this.newContent.holder.URLHolder)
+            bodyFormData.set('thumbnailScans', this.removeBase64Headers(thumbnail.src))
+            console.log("Lo del bodyForm")
+            for (var pair of bodyFormData.entries()) {
+                console.log(pair[0], pair[1]);
+            }
+
+            this.axios.post('http://localhost/Odr/connections/streamingContent/content/saveScans.php', bodyFormData).then(response => {
+                console.log(response.data)
+                alert(response.data)
+                this.btnText = "Subido"
+            }).catch(error => {
+                console.log(error)
+                this.btnText = "ERROR!!!"
+            })
+        },
+        uploadVideo () {
+            let formData = new FormData();
+            formData.append('file', this.newContent.video);
+            formData.set('titulo', this.newContent.titulo)
+            formData.set('idHolder', this.newContent.holder.idHolder)
+            formData.set('category', JSON.stringify(this.newContent.categoria))
+            formData.set('URLHolder', this.newContent.holder.URLHolder)
+
+            this.axios.post( 'http://localhost/Odr/connections/streamingContent/content/uploadVideo.php',
+                formData,{
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            ).then(response => {
+                console.log("response", response.data)
+                alert(response.data)
+                this.btnText = "Subido"
+            }).catch(function(){
+                console.log('FAILURE!!');
+                this.btnText = "ERROR!!!"
+            });
+        }
     },
     computed: {
         // Filtrar holders por categoria
@@ -209,14 +312,18 @@ export default {
             });
 
             data.Sagas.forEach(elementSaga => {
-                elementSaga.Holders.forEach(elementHolders => {
-                    let holder = {
-                        tituloHolder: elementHolders.TituloHolder,
-                        idHolder: elementHolders.IdHolder,
-                        IdCategoria: elementHolders.IdCategoria
-                    }
-                    holders.push(holder)
-                })
+                if (Array.isArray(elementSaga.Holders)) {
+                    elementSaga.Holders.forEach(elementHolders => {
+                        let holder = {
+                            tituloHolder: elementHolders.TituloHolder,
+                            idHolder: elementHolders.IdHolder,
+                            IdCategoria: elementHolders.IdCategoria,
+                            URLHolder: elementHolders.URLHolder
+                        }
+                        holders.push(holder)
+                    })
+                }
+                
                 let saga = {
                     tituloSaga: elementSaga.TituloSaga,
                     idSaga: elementSaga.IdSaga,
@@ -233,7 +340,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .centered-input input {
         text-align: center;
     }

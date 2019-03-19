@@ -129,29 +129,35 @@ export default {
     created () {
         this.urlHolder = this.$route.params.urlHolder
         this.urlSaga = this.$route.params.urlSaga
+
         // Comprobar que ya se haya cargado una saga y que esta tenga la misma id que a la que se entro
         if (Object.keys(this.saga).length === 0 && this.saga.constructor === Object) {
             console.log('No se tenia ninguna saga cargada')
-            this.$store.dispatch('loadSagaData', this.idSaga)
+            this.$store.dispatch('loadSagaData', this.urlSaga)
         } else {
-            if (this.$store.getters.getSagaData.idSaga !== this.idSaga) {
-                this.$store.dispatch('loadSagaData', this.idSaga)
+            if (this.$store.getters.getSagaData.urlSaga !== this.urlSaga) {
+                this.$store.dispatch('loadSagaData', this.urlSaga)
                 console.log('Se tenia cargada otra saga')
             } else
                 console.log('La misma saga cargada')
         }
     },
+    mounted () {
+        console.log("LOL?")
+    },
     computed: {
         saga () {
+            
             return this.$store.getters.getSagaData
         },
         currentContent () {
+            console.log("QUE PEDO", this.saga.content)
             if (this.saga.content){
                 console.log("Current Content",this.saga.content.find((element) => {
-                    return element.idHolder === this.idHolder
+                    return element.url === this.urlHolder
                 }))
                 return this.saga.content.find((element) => {
-                    return element.idHolder === this.idHolder
+                    return element.url === this.urlHolder
                 })
             }
             else

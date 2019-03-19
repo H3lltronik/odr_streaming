@@ -58,8 +58,9 @@
                     </v-layout>
                 </v-carousel-item>
             </v-carousel>
-            <v-layout row wrap justify-center>
-                <v-btn color="error" @click="resetImages()" v-if=(selected)>Remove all images</v-btn>
+            <v-layout row wrap justify-center v-if=(selected)>
+                <v-btn color="error" @click="resetImages()">Remove all images</v-btn>
+                <v-btn color="info" @click="passImagesToParent">Load images</v-btn>
             </v-layout>
         </v-flex>
     </div>
@@ -94,6 +95,9 @@ export default {
         }
     },
     methods: {
+        passImagesToParent () {
+            this.$emit('passImages', this.newCharacter.images)
+        },
         getImageByIndex (index, outerLoop) {
             index = this.getLoopIndex(index, outerLoop)
             if(this.newCharacter.images[index-1] !== null && this.newCharacter.images[index-1] !== undefined){

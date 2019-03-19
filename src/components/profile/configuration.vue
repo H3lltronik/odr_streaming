@@ -13,7 +13,8 @@
                             </v-img>
                         </v-flex>
                         <v-flex xs6 md8>
-                            <select-image :title="placeholders.imagen[currConfig.idioma]" v-on:getSource=" changePreview($event)"></select-image>
+                            <!-- <select-image :title="placeholders.imagen[currConfig.idioma]" v-on:getSource=" changePreview($event)"></select-image> -->
+                            <v-btn color="primary" @click="gotoToPage ('avatar')">ABRIR EDITOR DE AVATAR</v-btn>
                         </v-flex>
 
                         <v-flex xs12>
@@ -126,7 +127,10 @@ export default {
         },
         saveConfiguration () {
             this.$store.dispatch('saveUserConfiguration')
-        }
+        },
+        gotoToPage (page) {
+            this.$router.replace('/' + page)
+        },
     },
     computed: {
         currConfig () {

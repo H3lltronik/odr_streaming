@@ -108,7 +108,7 @@
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
-                        <v-btn color="success" block @click="createCharacter">CREATE CHARACTER</v-btn>
+                        <v-btn color="success" block @click="createCharacter" :loading="loading">CREATE CHARACTER</v-btn>
                     </v-flex>
                 </v-layout>
             </v-card-text>
@@ -135,11 +135,13 @@ export default {
             ],
             imgsIndex: 0,
             selected: false,
-            showCoverTooltip: true
+            showCoverTooltip: true,
+            loading: false,
         }
     },
     methods: {
         createCharacter () {
+            this.loading = true
             let bodyFormData = new FormData ()
             //Reset array
             this.newCharacter.imagesNoHeader = []
@@ -158,10 +160,16 @@ export default {
             bodyFormData.set('profilePic', this.removeBase64Headers(cover.src))
             bodyFormData.set('nPaginas', this.newCharacter.images.length)
 
-            this.axios.post('http://localhost/Odr/connections/createCharacter.php', bodyFormData).then(response => {
-                console.log(response)
+            this.axios.post('http://localhost/Odr/connections/streamingContent/creating/createCharacter.php', bodyFormData).then(response => {
+                this.loading = false
+                console.log(response.data)
+                if (response.data.status == "OK")
+                    alert('Se ha creado el personaje correctamente')
+                else
+                    alert('Ha ocurrido un error creando al personaje')
             }).catch(error => {
                 console.log(error)
+                this.loading = false
             })
         },
         removeBase64Headers (base64) {

@@ -553,15 +553,5 @@ export default {
 </script>
 
 <style>
-    .centered-input input {
-        text-align: center;
-    }
-
-    .centered-input input:focus {
-        caret-color: white;
-    }
-
-    .v-input--selection-controls .v-input__control {
-        width: 1000px !important;
-    }
+    
 </style>

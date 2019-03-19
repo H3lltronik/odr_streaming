@@ -41,6 +41,8 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
 
+        <buscador></buscador>
+
         <v-btn flat class="white--text" @click="gotoToPage('profileConfiguration')" v-if="isUserLogged"> 
           <v-layout row wrap fill-height justify-center align-center class="mr-2">
             <v-avatar
@@ -63,7 +65,7 @@
     </v-toolbar>
 
     <v-content>
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </v-content>
   </v-app>
 </template>
@@ -81,7 +83,9 @@ export default {
       this.$emit('font-loaded')
     },
     gotoToPage (page) {
-      this.$router.replace('/' + page)
+      this.$nextTick(() => {
+        this.$router.replace('/' + page)
+      })
     },
     logout () {
       this.$store.dispatch('logout')

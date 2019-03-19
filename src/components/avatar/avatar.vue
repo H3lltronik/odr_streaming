@@ -1,10 +1,11 @@
 <template>
     <div>
-        <!-- <unity src="static/Build/Avatar.json" width="1000" height="600" unityLoader="static/Build/UnityLoader.js"></unity> -->
-        <label>File
-            <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-        </label>
-        <v-btn color="primary" @click="submitFile()">Subir</v-btn>
+        <v-layout row wrap justify-center>
+            <v-btn color="success" @click="loadUserData">Load User Data</v-btn>
+        </v-layout>
+        <v-layout row wrap justify-center class="mt-3">
+            <unity src="static/Build/Avatar.json" width="1000" height="600" unityLoader="static/Build/UnityLoader.js" ref="unityAvatar"></unity>
+        </v-layout>
     </div>
 </template>
 
@@ -16,29 +17,11 @@ export default {
         }
     },
     methods: {
-        /*
-        Submits the file to the server
-      */
-      submitFile(){
-            let formData = new FormData();
-            formData.append('file', this.file);
-            this.axios.post( 'http://localhost/Odr/connections/streamingContent/content/uploadVideo.php',
-                formData,{
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-              }
-            ).then(response => {
-                console.log(response.data)
-            }).catch(function(){
-                console.log('FAILURE!!');
-            });
-      },
-      handleFileUpload(){
-        this.file = this.$refs.file.files[0];
-      },        
-    },
-    created () {
+        loadUserData () {
+            let userId = this.$store.getters.getUserData.id
+            console.log(userId)
+            this.$refs.unityAvatar.message("Screenshot", "setProfileFolder", userId)
+        }
     }
 }
 </script>
